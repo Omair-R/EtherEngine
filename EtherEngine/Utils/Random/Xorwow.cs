@@ -13,7 +13,7 @@ namespace EtherEngine.Utils.Random
 
         uint counter = 6615241;
 
-        public override uint NextUInt32()
+        public override uint NextUInt()
         {
             uint t = (x ^ (x >> 2));
 
@@ -27,6 +27,6 @@ namespace EtherEngine.Utils.Random
             return v + counter;
         }
 
-        public override ulong NextUInt64() => (((ulong)NextUInt32()) << 32) | NextUInt32();
+        public override ulong NextULong() => (((ulong)NextUInt()) << 32) | NextUInt();
     }
 }

@@ -20,11 +20,12 @@ namespace EtherEngine.Particle
         public float LifeTime { get; set; }
         public float RemainingTime { get; private set; }
         public bool Active { get; set; }
-        public ulong RandomIdentifier { get; private set; }
+        public Guid RandomIdentifier { get; private set; }
 
         public Particle(ParticlePool pool)
         {
-            RandomIdentifier = StaticRandom.Random.NextUInt64();
+            //RandomIdentifier = StaticRandom.Random.NextUInt64();
+            RandomIdentifier = Guid.NewGuid();
             _pool = pool;
         }
 

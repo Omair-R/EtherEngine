@@ -11,8 +11,10 @@ namespace EtherEngine.Utils.Random
     {
         private ulong x, y;
 
+        public override uint NextUInt() => (uint)(NextULong() >> 32);
+
         // Implementation of the xorshift128+
-        public override ulong NextUInt64()
+        public override ulong NextULong()
         {
             ulong tx = x;
             ulong ty = y;
@@ -27,5 +29,6 @@ namespace EtherEngine.Utils.Random
 
             return tx+ty;
         }
+
     }
 }

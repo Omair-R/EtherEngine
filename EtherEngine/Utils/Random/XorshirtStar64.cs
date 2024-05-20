@@ -9,7 +9,10 @@ namespace EtherEngine.Utils.Random
     public class XorshirtStar64 : AbstractRandom
     {
         private ulong x = 1;
-        public override ulong NextUInt64()
+
+        public override uint NextUInt() => (uint)(NextULong() >> 32);
+
+        public override ulong NextULong()
         {
             x ^= x >> 12;
             x ^= x >> 25;

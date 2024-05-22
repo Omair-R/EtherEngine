@@ -8,23 +8,31 @@ namespace EtherEngine.Utils.Random
 {
     public class Xorwow : AbstractRandom
     {
-        uint x = 123456789, y = 362436069, z = 521288629,
-                   w = 88675123, v = 5783321;
+        uint _x, _y = 362436069, _z = 521288629,
+                   _w = 88675123, _v = 5783321;
 
         uint counter = 6615241;
 
+        public Xorwow(ulong? seed = null) : base(seed) { }
+
+        public override void ResetInternalState()
+        {
+            SplitMix64 splitMix64 = new SplitMix64(_seed);
+            _x = (uint)(splitMix64.NextULong() >> 32);
+            _x += _x % 2u == 0u ? 1u : 0u; //making sure the state is not even.
+        }
         public override uint NextUInt()
         {
-            uint t = (x ^ (x >> 2));
+            uint t = (_x ^ (_x >> 2));
 
-            x = y;
-            y = z;
-            z = w;
-            w = v;
-            v = (v ^ (v << 4)) ^ (t ^ (t << 1));
+            _x = _y;
+            _y = _z;
+            _z = _w;
+            _w = _v;
+            _v = (_v ^ (_v << 4)) ^ (t ^ (t << 1));
 
             counter += 362437;
-            return v + counter;
+            return _v + counter;
         }
 
         public override ulong NextULong() => (((ulong)NextUInt()) << 32) | NextUInt();

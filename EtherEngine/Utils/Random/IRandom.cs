@@ -5,6 +5,10 @@ namespace EtherEngine.Utils.Random
 {
     public interface IRandom
     {
+        public ulong Seed { get; set; }
+
+        public void ResetInternalState();
+
         public uint NextUInt();
         public ulong NextULong();
         public uint NextUInt(uint maxValue);
@@ -35,10 +39,30 @@ namespace EtherEngine.Utils.Random
     // Heavily adapted from the system Library.
     public abstract class AbstractRandom : IRandom
     {
+        protected ulong _seed;
+        public virtual ulong Seed
+        {
+            get => _seed;
+            set
+            {
+                _seed = value;
+                ResetInternalState();
+            }
+        }
 
-        public abstract ulong NextULong();
+        protected AbstractRandom(ulong? seed = null)
+        {
+            if (seed != null)
+                Seed = (ulong)seed;
+            else
+                Seed = (ulong)DateTime.Now.Ticks;
+        }
 
-        public abstract uint NextUInt();
+        public abstract void ResetInternalState();
+
+        public virtual ulong NextULong() => (((ulong)NextUInt()) << 32) | NextUInt();
+
+        public virtual uint NextUInt() => (uint)(NextULong() >> 32);
 
         #region Unsigned
         // Note from System library.
@@ -148,7 +172,7 @@ namespace EtherEngine.Utils.Random
         #endregion
 
         #region Decimal
-        public float NextFloat() => NextULong() / ulong.MaxValue;
+        public float NextFloat() => NextUInt() / uint.MaxValue;
 
         public float NextFloat(float maxValue)
         {
@@ -186,5 +210,7 @@ namespace EtherEngine.Utils.Random
         {
             return (NextULong() % 2) != 0 ;
         }
+
+        
     }
 }

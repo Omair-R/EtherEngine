@@ -1,4 +1,5 @@
-﻿using EtherEngine.Utils.Random;
+﻿using EtherEngine.Sprite;
+using EtherEngine.Utils.Random;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -9,34 +10,77 @@ namespace EtherEngine.Particle
     public class Particle
     {
         private ParticlePool _pool;
-        public Texture2D Texture { get; set; } //TODO: Change this.
-        public Vector2 Center { get; set; }
-        public float Velocity { get; set; }
-        public Vector2 Size { get; set; }
-        public float Angle { get; set; }
-        public float AngularVelocity { get; set; }
-        public Color Color { get; set; }
-        public float Alpha { get; set; }
-        public float LifeTime { get; set; }
+
+        public TexturedSprite Sprite; //TODO: Change this.
+
+        public Vector2 Position;
+        public Vector2 Velocity;
+
+        public Vector2 Acceleration;
+        public float Damping;
+
+        public float Angle;
+        public float AngularVelocity;
+
+        public float SizeBegin;
+        public float Size;
+
+        public Color ColorBegin;
+        public Color Color;
+
+        public float AlphaBegin;
+        public float Alpha;
+
+        private float _lifeTime;
+        public float LifeTime{get => _lifeTime; set { 
+                _lifeTime = value;
+                RemainingTime = _lifeTime;
+                Reset();
+            } 
+        }
+
         public float RemainingTime { get; private set; }
         public bool Active { get; set; }
         public Guid RandomIdentifier { get; private set; }
 
+        public float Accumulated_time { get; private set; } = 0;
+
         public Particle(ParticlePool pool)
         {
-            //RandomIdentifier = StaticRandom.Random.NextUInt64();
             RandomIdentifier = Guid.NewGuid();
             _pool = pool;
         }
 
+        public void Reset() => Accumulated_time = 0;
+
         public void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Velocity += Acceleration * dt - Damping * Velocity;
+            Position += Velocity * dt;
+
+            Angle += AngularVelocity * dt;
+
+            RemainingTime -= dt;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            throw new NotImplementedException();
+            Sprite.Center = Position;
+            Sprite.Color = Color;
+            Sprite.Scale = new Vector2(Size, Size);
+            Sprite.Rotation = Angle;
+
+            Sprite.Draw(spriteBatch);
+        }
+
+        public void CheckStillAlive()
+        {
+            if (RemainingTime <= 0)
+            {
+                _pool.Return(this);
+                Active = false;
+            }
         }
 
         public override bool Equals(object obj)

@@ -15,7 +15,7 @@ namespace EtherEngine.Particle
 
         public bool Return(Particle obj)
         {
-            obj.Active = false;
+            obj.Reset();
             return true;
         }
     }

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace EtherEngine.Utils.Random
 {
-    public class XorshiftPlus128 : AbstractRandom
+    public class Xorshift128Plus : AbstractRandom
     {
         private ulong _x, _y;
 
-        public XorshiftPlus128(ulong? seed = null) : base(seed) { }
+        public Xorshift128Plus(ulong? seed = null) : base(seed) { }
 
         public override void ResetInternalState()
         {
@@ -40,11 +40,11 @@ namespace EtherEngine.Utils.Random
     }
 
 
-    public class XorshirtStar64 : AbstractRandom
+    public class Xorshift64Star : AbstractRandom
     {
         private ulong _x;
 
-        public XorshirtStar64(ulong? seed = null) : base(seed) { }
+        public Xorshift64Star(ulong? seed = null) : base(seed) { }
 
         public override void ResetInternalState()
         {

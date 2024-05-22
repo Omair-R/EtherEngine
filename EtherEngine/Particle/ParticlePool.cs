@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.ObjectPool;
 
 namespace EtherEngine.Particle
@@ -16,14 +17,13 @@ namespace EtherEngine.Particle
         public void Get(out Particle particle)
         {
             particle = _pool.Get();
-            while (!ParticleList.Add(particle)) //Make sure that the hash does not return a dublicate
-                particle = _pool.Get();
+            ParticleList.Add(particle);
         }
 
         public void Return(in Particle particle)
         {
             _pool.Return(particle);
-            ParticleList.Remove(particle);
+            //ParticleList.Remove(particle); //Relay the removal to the update method.
         }
 
         public bool Contains(in Particle particle)

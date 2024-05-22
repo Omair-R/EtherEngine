@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Diagnostics;
 
 namespace EtherEngine.Sprite
 {
@@ -84,8 +85,7 @@ namespace EtherEngine.Sprite
             {
                 Effect = SpriteEffects.FlipHorizontally;
                 isFlipped = true;
-            }
-                
+            }    
         }
             
         virtual public void Load(ContentManager contentManager)
@@ -98,11 +98,11 @@ namespace EtherEngine.Sprite
 
         virtual public void Draw(GraphicsResource spriteBatch)
         {
-            if (!isLoaded) throw new Exception("the sprite is not loaded, please load it using the Load method");
+            Debug.Assert(isLoaded);
 
             var _spriteBatch = spriteBatch as SpriteBatch;
 
-            if (_spriteBatch == null) throw new NotSupportedException();
+            Debug.Assert(_spriteBatch != null);
 
             _spriteBatch.Draw(
                 _texture,

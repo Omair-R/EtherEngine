@@ -35,6 +35,5 @@ namespace EtherEngine.Utils.Random
             return _v + counter;
         }
 
-        public override ulong NextULong() => (((ulong)NextUInt()) << 32) | NextUInt();
     }
 }

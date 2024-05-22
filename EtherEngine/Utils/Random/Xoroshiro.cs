@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace EtherEngine.Utils.Random
 {
-    public class Xoroshiro128Plus : AbstractRandom
+    #region XoroshiroLong
+    public abstract class XoroshiroLong : AbstractRandom
     {
-        private ulong _x, _y;
+        protected ulong _x, _y;
 
-        public Xoroshiro128Plus(ulong? seed = null) : base(seed) { }
+        public XoroshiroLong(ulong? seed = null) : base(seed) { }
 
         public override void ResetInternalState()
         {
@@ -18,32 +19,120 @@ namespace EtherEngine.Utils.Random
             _x = splitMix64.NextULong();
             _y = splitMix64.NextULong();
         }
+    }
+    public class Xoroshiro128Plus : XoroshiroLong
+    {
 
-        public override uint NextUInt() => (uint)(NextULong() >> 32);
+        public Xoroshiro128Plus(ulong? seed = null) : base(seed) { }
 
-        // Implementation of the xorshift128+
+        public override ulong NextULong()
+        {
+
+            ulong tx = _x;
+            ulong ty = _y;
+            ulong result = tx + ty;
+
+            ty ^= tx;
+            _x = RandomUtils._Rotl64(tx, 24) ^ ty ^ (ty << 16);
+            _y = RandomUtils._Rotl64(ty, 37);
+
+            return result;
+        }
+    }
+
+    public class Xoroshiro128PlusPlus : XoroshiroLong
+    {
+
+        public Xoroshiro128PlusPlus(ulong? seed = null) : base(seed) { }
+
+
         public override ulong NextULong()
         {
             ulong tx = _x;
             ulong ty = _y;
 
-            _x = ty;
-
-            tx ^= tx << 23;
-            tx ^= tx >> 18;
-            tx ^= ty ^ (ty >> 5);
-
-            _y = tx;
-
-            const ulong tx = s[0];
-            ulong ty = s[1];
-            const ulong result = tx + ty;
+            ulong result = RandomUtils._Rotl64(tx + ty, 17) + tx;
 
             ty ^= tx;
-            s[0] = rotl(tx, 24) ^ ty ^ (ty << 16); // a, b
-            s[1] = rotl(ty, 37); // c
+            _x = RandomUtils._Rotl64(tx, 49) ^ ty ^ (ty << 21);
+            _y = RandomUtils._Rotl64(ty, 28);
 
-            return tx + ty;
+            return result;
         }
     }
+
+    public class Xoroshiro128StarStar : XoroshiroLong
+    {
+
+        public Xoroshiro128StarStar(ulong? seed = null) : base(seed) { }
+
+
+        public override ulong NextULong()
+        {
+            ulong tx = _x;
+            ulong ty = _y;
+
+            ulong result = RandomUtils._Rotl64(tx * 5, 7) *9;
+
+            ty ^= tx;
+            _x = RandomUtils._Rotl64(tx, 24) ^ ty ^ (ty << 16);
+            _y = RandomUtils._Rotl64(ty, 37);
+
+            return result;
+        }
+    }
+    #endregion
+
+    #region XoroshiroShort
+
+    public abstract class XoroshiroShort : AbstractRandom
+    {
+        protected uint _x, _y;
+
+        public XoroshiroShort(ulong? seed = null) : base(seed) { }
+
+        public override void ResetInternalState()
+        {
+            SplitMix64 splitMix64 = new SplitMix64(_seed);
+            _x = splitMix64.NextUInt();
+            _y = splitMix64.NextUInt();
+        }
+    }
+    public class Xoroshiro64Star : XoroshiroShort
+    {
+
+        public Xoroshiro64Star(ulong? seed = null) : base(seed) { }
+
+        public override uint NextUInt()
+        {
+            uint tx = _x;
+            uint ty = _y;
+            uint result = tx * 0x9E3779BB;
+
+            ty ^= tx;
+            _x = RandomUtils._Rotl32(tx, 26) ^ ty ^ (ty << 9);
+            _y = RandomUtils._Rotl32(ty, 12);
+
+            return result;
+        }
+    }
+
+    public class Xoroshiro64StarStar : XoroshiroShort
+    {
+        public Xoroshiro64StarStar(ulong? seed = null) : base(seed) { }
+
+        public override uint NextUInt()
+        {
+            uint tx = _x;
+            uint ty = _y;
+            uint result = RandomUtils._Rotl32(tx * 0x9E3779BB, 5) * 5;
+
+            ty ^= tx;
+            _x = RandomUtils._Rotl32(tx, 26) ^ ty ^ (ty << 9);
+            _y = RandomUtils._Rotl32(ty, 12);
+
+            return result;
+        }
+    } 
+    #endregion
 }

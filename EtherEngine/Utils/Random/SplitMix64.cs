@@ -11,28 +11,9 @@ namespace EtherEngine.Utils.Random
 
         private ulong _x;
 
-        private ulong _seed;
-        public override ulong Seed
-        {
-            get => _seed;
-            set
-            {
-                _seed = value;
-                ResetInternalState();
-            }
-        }
-
-        public SplitMix64(ulong? seed=null)
-        {
-            if (seed != null)
-                Seed = (ulong)seed;
-            else
-                Seed = (ulong)DateTime.Now.Ticks;
-        }
+        public SplitMix64(ulong? seed = null) : base(seed) { }
 
         public override void ResetInternalState() => _x = _seed;
-
-        public override uint NextUInt() => (uint)(NextULong() >> 32);
 
         public override ulong NextULong()
         {

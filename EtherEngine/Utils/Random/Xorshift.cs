@@ -7,27 +7,11 @@ using System.Threading.Tasks;
 
 namespace EtherEngine.Utils.Random
 {
-    public class Xorshift128Plus : AbstractRandom
+    public class XorshiftPlus128 : AbstractRandom
     {
         private ulong _x, _y;
-        private ulong _seed;
-        public override ulong Seed
-        {
-            get => _seed;
-            set
-            {
-                _seed = value;
-                ResetInternalState();
-            }
-        }
 
-        public Xorshift128Plus(ulong? seed = null)
-        {
-            if (seed != null)
-                Seed = (ulong)seed;
-            else
-                Seed = (ulong)DateTime.Now.Ticks;
-        }
+        public XorshiftPlus128(ulong? seed = null) : base(seed) { }
 
         public override void ResetInternalState()
         {
@@ -35,8 +19,6 @@ namespace EtherEngine.Utils.Random
             _x = splitMix64.NextULong();
             _y = splitMix64.NextULong();
         }
-
-        public override uint NextUInt() => (uint)(NextULong() >> 32);
 
         // Implementation of the xorshift128+
         public override ulong NextULong()
@@ -56,4 +38,29 @@ namespace EtherEngine.Utils.Random
         }
 
     }
+
+
+    public class XorshirtStar64 : AbstractRandom
+    {
+        private ulong _x;
+
+        public XorshirtStar64(ulong? seed = null) : base(seed) { }
+
+        public override void ResetInternalState()
+        {
+            SplitMix64 splitMix64 = new SplitMix64(_seed);
+            _x = splitMix64.NextULong();
+        }
+
+        public override ulong NextULong()
+        {
+            _x ^= _x >> 12;
+            _x ^= _x >> 25;
+            _x ^= _x >> 26;
+            return unchecked(_x * 0x2545F4914F6CDD1DUL);
+        }
+    }
+
+
+
 }

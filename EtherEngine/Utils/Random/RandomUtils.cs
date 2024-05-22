@@ -18,7 +18,12 @@ namespace EtherEngine.Utils.Random
             return x >> r | x << (-r & 63);
         }
 
-        public static ulong rotl(ulong x, int r) {
+        public static uint _Rotl32(uint x, int r)
+        {
+            return (x << r) | (x >> (32 - r));
+        }
+
+        public static ulong _Rotl64(ulong x, int r) {
 	        return (x << r) | (x >> (64 - r));
         }
     }

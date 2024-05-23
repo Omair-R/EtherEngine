@@ -85,7 +85,23 @@ namespace EtherEngine.DrawBatch
 
         public void Flush()
         {
-            throw new NotImplementedException();
+            device.BlendState = BlendState.AlphaBlend;
+
+            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                device.DrawUserIndexedPrimitives(
+                    PrimitiveType.TriangleList,
+                    vertices,
+                    0,
+                    verticesCount,
+                    indices,
+                    0,
+                    indicesCount / 3);
+            }
+
+            verticesCount = 0;
+            indicesCount = 0;
         }
 
         public void SetEffect(BasicEffect effect)
@@ -119,6 +135,28 @@ namespace EtherEngine.DrawBatch
         private void CheckCapacity(int checkVertices)
         {
             if (checkVertices > maxVerticesCount) throw new Exception("The number of vertices is higher than the maximum capacity of the vertex buffer."); ;
+        }
+
+        public void DrawShape(IShape shape, Color color) //TODO: Optimize this
+        {
+            if (shape is Circle circle)
+            {
+                this.DrawCircle(circle, color, 30); // TODO:Fix the resolution;
+            }
+            else if (shape is RotatableQuad rotatableQuad)
+            {
+                this.DrawRectangle(rotatableQuad, color);
+            }
+            else if (shape is StaticQuad quad)
+            {
+                this.DrawRectangle(quad, color);
+            }
+            else if (shape is Polygon poly)
+            {
+                this.DrawPolygon(poly, color);
+            }
+            else throw new Exception();
+
         }
 
         protected void DrawRectangle(float x, float y, float width, float height, Color color)

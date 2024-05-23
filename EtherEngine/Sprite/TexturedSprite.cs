@@ -19,6 +19,12 @@ namespace EtherEngine.Sprite
         public Vector2 Scale { get; set; }
         public float Rotation { get; set; }
         public Color Color { get; set; }
+        private float _alpha;
+        public float Alpha { get => _alpha; set { 
+                _alpha = value;
+                Color = new Color(Color, _alpha);
+            }
+        }
         public SpriteEffects Effect { get; set; }
 
         private bool isLoaded;
@@ -29,6 +35,7 @@ namespace EtherEngine.Sprite
             Vector2 center, 
             Vector2 scale, 
             Color color, 
+            float alpha=1f,
             float rotation=0f, 
             float layerDepth = 0f,
             SpriteEffects spriteEffect= SpriteEffects.None) 
@@ -43,7 +50,7 @@ namespace EtherEngine.Sprite
             Center = center;
             Scale = scale;
             Rotation = rotation;
-            Color = color;
+            Color = new Color(color,alpha);
             _layerDepth = layerDepth;
             Effect = spriteEffect;
 
@@ -56,19 +63,21 @@ namespace EtherEngine.Sprite
             Vector2 center,
             Vector2 scale,
             Color color,
+            float alpha = 1f,
             float rotation = 0f,
             float layerDepth = 0f,
             SpriteEffects spriteEffect = SpriteEffects.None)
-            : this(textureName, Rectangle.Empty, center, scale, color,rotation, layerDepth, spriteEffect)
+            : this(textureName, Rectangle.Empty, center, scale, color,alpha, rotation, layerDepth, spriteEffect)
         { }
 
         public TexturedSprite(string textureName,
             Vector2 center,
-            Vector2 scale, 
-            float rotation = 0f, 
+            Vector2 scale,
+            float alpha = 1f,
+            float rotation = 0f,
             float layerDepth = 0f,
             SpriteEffects spriteEffect = SpriteEffects.None)
-            : this(textureName, Rectangle.Empty, center, scale, Color.White, rotation, layerDepth, spriteEffect)
+            : this(textureName, Rectangle.Empty, center, scale, Color.White, alpha, rotation, layerDepth, spriteEffect)
         { }
 
         public StaticQuad GetStaticQuad() => new StaticQuad(Center, Scale.X, Scale.Y);

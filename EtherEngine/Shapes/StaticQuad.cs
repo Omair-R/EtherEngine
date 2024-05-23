@@ -51,6 +51,15 @@ namespace EtherEngine.Shapes
             }
         }
 
+        public Vector2 Center
+        {
+            get => GetCenter();
+            set {
+                X = value.X;
+                Y = value.Y;
+            }
+        }
+
 
         public StaticQuad(float x, float y, float width, float height)
         {
@@ -72,7 +81,7 @@ namespace EtherEngine.Shapes
         public StaticQuad(Vector2 min, Vector2 max)
         {
             this.Width = max.X - min.X;
-            this.Height = min.Y - max.Y;
+            this.Height = max.Y - min.Y;
             this.X = min.X + this.Width / 2;
             this.Y = min.Y + this.Height / 2;
         }

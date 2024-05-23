@@ -140,7 +140,7 @@ namespace EtherEngine.Collision.Utils
 
         static public bool CircleOnRotatableQuadCollision(Circle circle, RotatableQuad quad, out Contact contact, bool isOpposite = false)
         {
-            Vector2[] normals = new Vector2[4];
+            Vector2[] normals = new Vector2[3];
             normals[0] = SPA.ClosestVector(quad.Vertices, circle.Center);
             normals[1] = quad.Normals[0];
             normals[2] = quad.Normals[1];
@@ -150,7 +150,7 @@ namespace EtherEngine.Collision.Utils
             if (!collision)
                 return false;
 
-            contact.collisionDirection = SPA.TreatCollisionDirection(quad.GetCenter(), circle.Center, contact.collisionDirection, isOpposite);
+            contact.collisionDirection = SPA.TreatCollisionDirection(circle.Center, quad.GetCenter(), contact.collisionDirection, isOpposite);
 
             return true;
         }
@@ -189,7 +189,7 @@ namespace EtherEngine.Collision.Utils
             if (!collision)
                 return false;
 
-            contact.collisionDirection = SPA.TreatCollisionDirection(polygon.GetCenter(), circle.Center, contact.collisionDirection, isOpposite);
+            contact.collisionDirection = SPA.TreatCollisionDirection(circle.Center, polygon.GetCenter(), contact.collisionDirection, isOpposite);
 
             return true;
         }
@@ -207,7 +207,7 @@ namespace EtherEngine.Collision.Utils
             if (!collision)
                 return false;
 
-            contact.collisionDirection = SPA.TreatCollisionDirection(polygon.GetCenter(), quad.GetCenter(), contact.collisionDirection, isOpposite);
+            contact.collisionDirection = SPA.TreatCollisionDirection(quad.GetCenter(), polygon.GetCenter(), contact.collisionDirection, isOpposite);
 
             return true;
         }
@@ -224,7 +224,7 @@ namespace EtherEngine.Collision.Utils
             if (!collision)
                 return false;
 
-            contact.collisionDirection = SPA.TreatCollisionDirection(polygon.GetCenter(), quad.GetCenter(), contact.collisionDirection, isOpposite);
+            contact.collisionDirection = SPA.TreatCollisionDirection(quad.GetCenter(), polygon.GetCenter(), contact.collisionDirection, isOpposite);
 
             return true;
         }

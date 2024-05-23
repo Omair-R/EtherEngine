@@ -1,4 +1,5 @@
-﻿using EtherEngine.Utils.Random;
+﻿using EtherEngine.Sprite;
+using EtherEngine.Utils.Random;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -18,17 +19,22 @@ namespace EtherEngine.Particle
         private ParticlePool _particlePool;
 
         private readonly RandomSinglton _Random = RandomSinglton.GetInstance;
+        private TexturedSprite _sprite;
 
-        public ParticleEmitter(int amount, float interval, int capacity, EmittionInstruction instruction) 
+        private float _count = 0;
+        public ParticleEmitter(TexturedSprite texturedSprite,int amount, float interval, int capacity, EmittionInstruction instruction) 
         {
             Amount = amount;
             IntervalSeconds = interval;
             EmittionInstruction = instruction;
             _particlePool = new ParticlePool(capacity);
+            _sprite = texturedSprite;
         }
 
         public void Update(GameTime gameTime)
         {
+            _count -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             foreach (Particle p in _particlePool.ParticleList)
             {
                 Debug.Assert(p.Active);
@@ -55,29 +61,35 @@ namespace EtherEngine.Particle
 
         public void Emit()
         {
-            _particlePool.Get(out Particle particle);
+            if (_count > 0)
+                return;
+            for (int i =0; i < Amount; i++)
+            {
+                _particlePool.Get(out Particle particle);
+                particle.Sprite = _sprite;
+                ApplyVariance(EmittionInstruction.Position, EmittionInstruction.Spread, out particle.Position);
+                ApplyVariance(EmittionInstruction.InitVelocity, EmittionInstruction.InitVelocityVariance, out particle.Velocity);
+                particle.Acceleration = EmittionInstruction.Acceleration;
+                particle.Damping = EmittionInstruction.Damping;
 
-            ApplyVariance(EmittionInstruction.Position, EmittionInstruction.Spread, out particle.Position);
-            ApplyVariance(EmittionInstruction.InitVelocity, EmittionInstruction.InitVelocityVariance, out particle.Velocity);
-            particle.Acceleration = EmittionInstruction.Acceleration;
-            particle.Damping = EmittionInstruction.Damping;
+                ApplyVariance(EmittionInstruction.Angle, EmittionInstruction.AngleVariance, out particle.Angle);
+                particle.AngularVelocity = EmittionInstruction.AngularVelocity;
 
-            ApplyVariance(EmittionInstruction.Angle, EmittionInstruction.AngleVariance, out particle.Angle);
-            particle.AngularVelocity = EmittionInstruction.AngularVelocity;
+                ApplyVariance(EmittionInstruction.ScaleBegin, EmittionInstruction.ScaleVariance, out particle.Size);
+                particle.SizeBegin = particle.Size;
 
-            ApplyVariance(EmittionInstruction.ScaleBegin, EmittionInstruction.ScaleVariance, out particle.Size);
-            particle.SizeBegin = particle.Size;
+                particle.Color = EmittionInstruction.ColorBegin;
+                particle.ColorBegin = particle.Color;
 
-            particle.Color = EmittionInstruction.ColorBegin;
-            particle.ColorBegin = particle.Color;
+                ApplyVariance(EmittionInstruction.AlphaBegin, EmittionInstruction.AlphaVariance, out particle.Alpha);
+                particle.AlphaBegin = particle.Alpha;
 
-            ApplyVariance(EmittionInstruction.AlphaBegin, EmittionInstruction.AlphaVariance, out particle.Alpha);
-            particle.AlphaBegin = particle.Alpha;
+                particle.LifeTime = EmittionInstruction.LifeTime + _Random.Randomizer.NextFloat(EmittionInstruction.LifeTimeVariance);
+                particle.LifeTime -= _Random.Randomizer.NextFloat(EmittionInstruction.LifeTimeVariance);
 
-            particle.LifeTime = EmittionInstruction.LifeTime + _Random.Randomizer.NextFloat(EmittionInstruction.LifeTimeVariance);
-            particle.LifeTime -= _Random.Randomizer.NextFloat(EmittionInstruction.LifeTimeVariance);
-
-            particle.Active = true;
+                particle.Active = true;
+            }
+            _count = IntervalSeconds;
         }
 
         private void ApplyVariance(in Vector2 value,in Vector2 variance, out Vector2 output)

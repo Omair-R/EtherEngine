@@ -11,7 +11,7 @@ namespace EtherEngine.Collision
 {
     public class PolygonCollision : Collision<Polygon>
     {
-        public PolygonCollision(Polygon polygon)
+        public PolygonCollision(Polygon polygon, CollisionLayer layer = null) : base(layer)
         {
             this.type = CollisionTypes.Polygon;
             this.InnerShape = polygon;

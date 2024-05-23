@@ -28,7 +28,7 @@ namespace EtherEngine.Input
 
         public bool IsReleased(Keys key)
         {
-            return this.prevKeyboardState.IsKeyDown(key) && this.keyboardState.IsKeyDown(key);
+            return this.prevKeyboardState.IsKeyDown(key) && this.keyboardState.IsKeyUp(key);
         }
 
         public bool IsPressed(KeyMapper key) => IsPressed(key.InnerKey);

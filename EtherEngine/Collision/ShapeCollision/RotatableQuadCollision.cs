@@ -9,7 +9,7 @@ namespace EtherEngine.Collision
     public class RotatableQuadCollision : Collision<RotatableQuad>
     {
 
-        public RotatableQuadCollision(RotatableQuad quad)
+        public RotatableQuadCollision(RotatableQuad quad, CollisionLayer layer = null) : base(layer)
         {
             this.type = CollisionTypes.RotatableQuad;
             this.InnerShape = quad;

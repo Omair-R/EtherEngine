@@ -35,6 +35,11 @@ namespace EtherEngine.Motion
         }
 
         public abstract Vector2 MoveWithDirection(Vector2 position, Vector2 motionDirection, GameTime gameTime);
+
+        public override string ToString()
+        {
+            return _currentVelocity.ToString();
+        }
     }
 
     

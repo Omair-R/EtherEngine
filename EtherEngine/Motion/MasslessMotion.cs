@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Diagnostics;
 
 namespace EtherEngine.Motion
 {
@@ -20,6 +21,7 @@ namespace EtherEngine.Motion
 
         public MasslessMotion(float maxVelocity, float acceleration, float frictionCoeff)
         {
+            Debug.Assert(frictionCoeff <= 1 && frictionCoeff > 0);
             MaxVelocity = maxVelocity;
             Acceleration = acceleration;
             FrictionCoeff = frictionCoeff;

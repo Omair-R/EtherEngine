@@ -69,7 +69,8 @@ namespace EtherEngine.Particle
             Sprite.Center = Position;
             Sprite.Color = Color;
             Sprite.Scale = new Vector2(Size, Size);
-            Sprite.Rotation = Angle;
+            Sprite.Rotation = Angle; //??
+            Sprite.Alpha = Alpha;
 
             Sprite.Draw(spriteBatch);
         }

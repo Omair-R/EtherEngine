@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Diagnostics;
 
 namespace EtherEngine.Control
 {
@@ -6,13 +7,16 @@ namespace EtherEngine.Control
     {
         public float ProportionalGain { get; set; }
         public float? IntegralGain { get; set; } = null;
-        public float? DerivativeGain { get; set; } = null; 
+        public float? DerivativeGain { get; set; } = null;
+
+        public float Epsilon { get; set; } = 0.00004f;
 
         private float previousError = 0.0f;
         private float accumulatedIntegral = 0.0f;
 
         private bool enableDerivative = false;
         private bool enableIntegral = false;
+        
 
         public PID(float proportionalGain, float? integralGain = null, float? derivativeGain = null) 
         {
@@ -39,7 +43,7 @@ namespace EtherEngine.Control
 
             if (enableDerivative)
             {
-                float derivative = (error - previousError)/ (float)gameTime.ElapsedGameTime.TotalSeconds; 
+                float derivative = (error - previousError)/ ((float)gameTime.ElapsedGameTime.TotalSeconds + Epsilon); 
                 gain += (float)DerivativeGain * derivative;
             }
 

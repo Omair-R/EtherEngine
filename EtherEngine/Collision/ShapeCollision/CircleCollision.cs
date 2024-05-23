@@ -7,10 +7,10 @@ using System;
 
 namespace EtherEngine.Collision
 {
-    internal class CircleCollision : Collision<Circle>
+    public class CircleCollision : Collision<Circle>
     {
         
-        public CircleCollision(Circle circle)
+        public CircleCollision(Circle circle, CollisionLayer layer=null): base(layer)
         {
             this.type = CollisionTypes.Circle;
             this.InnerShape = circle;
@@ -34,7 +34,7 @@ namespace EtherEngine.Collision
         protected override bool CheckRotatableQuadCollision(ICollision other, out Contact contact)
         {
             if (other is RotatableQuadCollision otherQuad)
-                return CollisionUtils.CircleOnStaticQuadCollision(InnerShape, otherQuad.InnerShape, out contact);
+                return CollisionUtils.CircleOnRotatableQuadCollision(InnerShape, otherQuad.InnerShape, out contact);
             else throw new ArgumentException();
         }
 

@@ -7,21 +7,35 @@ namespace EtherEngine.Motion
 {
     public class PIDMotion : Motion
     {
-        public PID PID {  get; set; }
+        private PID _pidX;
+        private PID _pidY;
+        private float _mass;
 
-        public PIDMotion(float Kp, float? KI=null, float? KD= null) 
+        public PIDMotion(float maxVelocity, float mass, float Kp, float? KI=null, float? KD= null) 
         {
-            PID = new PID(Kp, KI, KD);
+            _pidX = new PID(Kp, KI, KD);
+            _pidY = new PID(Kp, KI, KD);
+            MaxVelocity = maxVelocity;
+            _mass = mass;
         }
 
         public override Vector2 MoveWithDirection(Vector2 position, Vector2 motionDirection, GameTime gameTime)
         {
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            float velocityUpdate = PID.Update(MathF.Max(_currentVelocity.X, _currentVelocity.Y),
-                        MaxVelocity,
+
+            Vector2 force = Vector2.Zero;
+
+            force.X = _pidX.Update(_currentVelocity.X,
+                        MaxVelocity * motionDirection.X,
                         gameTime);
 
-            _currentVelocity += motionDirection * velocityUpdate;
+            force.Y = _pidY.Update(_currentVelocity.Y,
+                        MaxVelocity * motionDirection.Y,
+                        gameTime);
+
+            Vector2 accel = force/_mass; //To have a stable model, mass should be considered. 
+
+            _currentVelocity += accel * elapsedTime;
             return position + _currentVelocity * elapsedTime;
         }
     }

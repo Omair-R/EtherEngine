@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Diagnostics;
 
 
 namespace EtherEngine.Camera
@@ -18,6 +19,7 @@ namespace EtherEngine.Camera
 
         public PositionalCamera(Vector2 postion, float rotation, float zoom, GraphicsDevice device) 
         {
+            Debug.Assert(zoom > 0);
             this.postion = postion;
             this.rotation = rotation;
             this.zoom = zoom;

@@ -67,10 +67,13 @@ namespace EtherEngine.Shapes
             vertices[2] = new Vector2(Width / 2, Height / 2);
             vertices[3] = new Vector2(-Width / 2, Height / 2);
 
+            float transX;
+            float transY;
+
             for (int i = 0; i < 4; i++)
             {
-                float transX = vertices[i].X * cos - vertices[i].Y * sin;
-                float transY = vertices[i].X * sin + vertices[i].Y * cos;
+                transX = vertices[i].X * cos - vertices[i].Y * sin;
+                transY = vertices[i].X * sin + vertices[i].Y * cos;
                 vertices[i].X = X + transX;
                 vertices[i].Y = Y + transY;
             }

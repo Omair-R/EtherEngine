@@ -25,10 +25,15 @@ namespace EtherEngine.Collision
 
         public void OnIntersectionHappened(CollisionEventArgs e) => EventUtils.Invoke(CollisionOccured, this, e);
 
+        public Collision(CollisionLayer layer)
+        {
+            Layer = layer;
+        }
+
         public bool CheckCollision(ICollision other, out Contact contact)
         {
 
-            if (!Layer.ShouldCollide(other.Layer))
+            if (Layer != null && !Layer.ShouldCollide(other.Layer))
             {
                 contact = null;
                 return false;

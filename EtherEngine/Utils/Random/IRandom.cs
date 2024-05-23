@@ -172,7 +172,7 @@ namespace EtherEngine.Utils.Random
         #endregion
 
         #region Decimal
-        public float NextFloat() => NextUInt() / uint.MaxValue;
+        public float NextFloat() => (float)NextUInt() / (float)uint.MaxValue;
 
         public float NextFloat(float maxValue)
         {
@@ -188,7 +188,7 @@ namespace EtherEngine.Utils.Random
             return NextFloat(maxValue - minValue) + minValue;
         }
 
-        public double NextDouble() => NextULong() / ulong.MaxValue;
+        public double NextDouble() => (double)NextULong() / (double)ulong.MaxValue;
 
         public double NextDouble(double maxValue)
         {

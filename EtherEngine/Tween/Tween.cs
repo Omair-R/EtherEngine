@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using EtherEngine.Utils;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,22 +17,24 @@ namespace CoolMono.Tween
         public abstract T To { get; protected set; }
         public float Duration { get; protected set; }
 
-        public readonly TweenType type;
+        public readonly TweenType _type;
 
-        protected TweenFunc tweenFunc;
-        protected DateTime staringTime;
-        protected T changeValue;
+        protected TweenFunc _tweenFunc;
+        protected T _changeValue;
 
-
+        protected Counter _counter;
         public bool IsStarted { get; protected set; }
         public bool IsFinished { get; protected set; }
 
+        public event EventHandler<EventArgs> Finished;
+
         public Tween(TweenType tweenType)
         {
-            this.tweenFunc = TweenMenu.MapTweenFunc(tweenType);
+            this._tweenFunc = TweenMenu.MapTweenFunc(tweenType);
 
             this.IsStarted = false;
             this.IsFinished = false;
+
         }
 
         public virtual void Start(T from, T to, float duration)
@@ -38,25 +42,28 @@ namespace CoolMono.Tween
             this.From = from;
             this.To = to;
             this.Duration = duration;
-            this.staringTime = DateTime.Now;
 
             IsStarted = true;
             IsFinished = false;
+
+            _counter = new Counter(duration);
         }
 
-        protected void PrepareTime(out float t)
+        protected void PrepareTime(GameTime gameTime, out float t)
         {
-            t = (float)(DateTime.Now - this.staringTime).TotalMilliseconds * 0.001f;
+            _counter.Update(gameTime);
+            t = _counter.GetProgress();
 
             if (t > Duration)
             {
                 t = Duration;
                 IsStarted = false;
                 IsFinished = true;
-            }     
+                EventUtils.Invoke(Finished, this, new EventArgs());
+            }
         }
 
-        public abstract T Update();
+        public abstract T Update(GameTime gameTime);
     }
 
 
@@ -71,13 +78,13 @@ namespace CoolMono.Tween
         public override void Start(float from, float to, float duration)
         {
             base.Start(from, to, duration);
-            this.changeValue = this.To - this.From;
+            this._changeValue = this.To - this.From;
         }
-        public override float Update()
+        public override float Update(GameTime gameTime)
         {
-            if (!IsStarted || IsFinished) return From; 
-            PrepareTime(out float t);
-            return this.changeValue * tweenFunc(t, Duration) + this.From;
+            if (!IsStarted || IsFinished) return From;
+            PrepareTime(gameTime, out float t);
+            return this._changeValue * _tweenFunc(t, Duration) + this.From;
         }
     }
 
@@ -92,14 +99,14 @@ namespace CoolMono.Tween
         public override void Start(Vector2 from, Vector2 to, float duration)
         {
             base.Start(from, to, duration);
-            this.changeValue = this.To - this.From;
+            this._changeValue = this.To - this.From;
         }
 
-        public override Vector2 Update()
+        public override Vector2 Update(GameTime gameTime)
         {
             if (!IsStarted || IsFinished) return From;
-            PrepareTime(out float t);
-            return this.changeValue * tweenFunc(t, Duration) + From;
+            PrepareTime(gameTime, out float t);
+            return this._changeValue * _tweenFunc(t, Duration) + From;
         }
     }
 
@@ -131,12 +138,12 @@ namespace CoolMono.Tween
 
         }
 
-        public override Color Update()
+        public override Color Update(GameTime gameTime)
         {
             if (!IsStarted || IsFinished) return From;
-            PrepareTime(out float t);
+            PrepareTime(gameTime, out float t);
 
-            Vector4 result = changeColor * tweenFunc(t, Duration) +fromColor;
+            Vector4 result = changeColor * _tweenFunc(t, Duration) +fromColor;
             result = Vector4.Clamp(result, Vector4.Zero, Vector4.One);
             return new Color(result.X, result.Y, result.Z, 1);
         }

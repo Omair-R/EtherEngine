@@ -5,20 +5,20 @@ namespace EtherEngine.Input
 {
     public class KeyMapper
     {
-        private Keys innerKey;
+        private Keys _innerKey;
         public Keys InnerKey { 
             get {
-                return innerKey;
+                return _innerKey;
             } 
         }
 
         public KeyMapper(Keys key) { 
-            this.innerKey = key;
+            this._innerKey = key;
         }
         
         public void RemapKey(Keys key)
         {
-            this.innerKey = key;
+            this._innerKey = key;
         }
 
 

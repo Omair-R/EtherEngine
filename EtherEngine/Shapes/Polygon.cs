@@ -7,37 +7,35 @@ namespace EtherEngine.Shapes
 {
     public class Polygon : IShape
     {
-        private Vector2[] vertices;
+        private Vector2[] _vertices;
         public Vector2[] Vertices {
-            get{ return vertices; }
+            get{ return _vertices; }
             set{ 
-                vertices = value;
-                normals = GetNormals();
+                _vertices = value;
+                _normals = GetNormals();
             }
         }
 
-        bool preComputeNormals=false;
-        Vector2[] normals;
-        
+        private bool _preComputeNormals;
+
+        private Vector2[] _normals;
 
         private void Setup(in Vector2[] vertices, bool preComputeNormals)
         {
             this.Vertices = vertices;
-            this.preComputeNormals = preComputeNormals;
-            if (preComputeNormals) this.normals = this.GetNormals(true);
+            this._preComputeNormals = preComputeNormals;
+
+            if (preComputeNormals) 
+                this._normals = this.GetNormals(true);
         }
+
         public Polygon(in Vector2[] vertices, bool preComputeNormals = true)
         {
             Setup(in vertices, preComputeNormals);
-
         }
 
-        public Polygon(Vector2[] vertices, bool preComputeNormals = true)  
-        {
-            Setup(in vertices, preComputeNormals);
-        }
 
-        public Polygon(List<Vector2> vertices, bool preComputeNormals = true)
+        public Polygon(in List<Vector2> vertices, bool preComputeNormals = true)
         {
             Vector2[] verticesArray = new Vector2[vertices.Count];
             Setup(in verticesArray, preComputeNormals);
@@ -58,8 +56,8 @@ namespace EtherEngine.Shapes
 
         public Vector2[] GetNormals(bool forceRecompute=false)
         {
-            if (preComputeNormals && !forceRecompute)
-                return this.normals;
+            if (_preComputeNormals && !forceRecompute)
+                return this._normals;
 
             Vector2[] edges = GetEdges();
             Vector2[] normals = new Vector2[edges.Length];

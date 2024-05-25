@@ -13,10 +13,10 @@ namespace EtherEngine.Collision
 
         public event EventHandler<CollisionEventArgs> CollisionOccured;
 
-        protected CollisionTypes type;
+        protected CollisionTypes _type;
         public CollisionTypes Type { 
             get { 
-                return type; 
+                return _type; 
             } 
         }
         public CollisionLayer Layer { get; set; }

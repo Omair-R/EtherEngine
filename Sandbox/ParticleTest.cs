@@ -14,11 +14,11 @@ namespace Sandbox
         ParticleEmitter emitter;
         EmittionInstruction emittionInstruction;
         KeyboardManager keyboardManager;
-        TexturedSprite texturedSprite;
+        Sprite texturedSprite;
         
         public void Initialize(GraphicsDevice graphicsDevice)
         {
-            keyboardManager = KeyboardManager.GetInstance;
+            keyboardManager = KeyboardManager.Instance;
             emittionInstruction = new EmittionInstruction()
             {
                 Position = new Vector2(400, 300),
@@ -53,7 +53,7 @@ namespace Sandbox
 
             };
 
-            texturedSprite = new TexturedSprite("Fall", Vector2.One,Vector2.One);
+            texturedSprite = new Sprite("Fall", Vector2.One,Vector2.One);
             emitter = new ParticleEmitter(texturedSprite, 50, 0.1f, 150, emittionInstruction);
         }
 

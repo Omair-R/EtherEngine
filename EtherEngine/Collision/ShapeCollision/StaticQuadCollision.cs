@@ -11,7 +11,7 @@ namespace EtherEngine.Collision
 
         public StaticQuadCollision(StaticQuad quad, CollisionLayer layer = null) : base(layer)
         {
-            this.type = CollisionTypes.StaticQuad;
+            this._type = CollisionTypes.StaticQuad;
             this.InnerShape = quad;
         }
 

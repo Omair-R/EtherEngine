@@ -1,20 +1,34 @@
-﻿using EtherEngine.Utils.Validate;
+﻿using EtherEngine.Utils;
+using EtherEngine.Utils.Validate;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 
 namespace EtherEngine.Sprite
 {
     public class TextSprite
     {
+        public event EventHandler<EventArgs> TextChanged;
 
-        private FlagValidator _loadValidator;
         public Color Color { get; set; }
         public Vector2 Position { get; set; }
-        public string Text { get; set; }
+
+        private string _text;
+
+        public string Text { 
+            get => _text; 
+            set {
+                _text = value;
+                EventUtils.Invoke(TextChanged, this, new EventArgs());
+            } 
+        }
 
         private TextWriter _writer;
+
+        private FlagValidator _loadValidator;
+        
 
         public TextSprite(string text, string font, Vector2 position, Color color)
         {
@@ -50,7 +64,7 @@ namespace EtherEngine.Sprite
         public void Draw(SpriteBatch spriteBatch)
         {
             _loadValidator.Check();
-            _writer.Write(Text, Position,Color, spriteBatch);
+            _writer.Write(spriteBatch, Text, Position, Color);
         }
     }
 }

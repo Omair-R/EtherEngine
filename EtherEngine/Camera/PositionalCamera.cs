@@ -8,22 +8,22 @@ namespace EtherEngine.Camera
 {
     public class PositionalCamera : ICamera
     {
-        protected Vector2 postion;
-        protected float rotation;
-        protected float zoom;
+        protected Vector2 _postion;
+        protected float _rotation;
+        protected float _zoom;
 
-        protected Matrix transform;
-        protected GraphicsDevice device;
+        protected Matrix _transform;
+        protected GraphicsDevice _device;
 
         private bool ShouldUpdate;
 
         public PositionalCamera(Vector2 postion, float rotation, float zoom, GraphicsDevice device) 
         {
             Debug.Assert(zoom > 0);
-            this.postion = postion;
-            this.rotation = rotation;
-            this.zoom = zoom;
-            this.device = device;
+            this._postion = postion;
+            this._rotation = rotation;
+            this._zoom = zoom;
+            this._device = device;
 
             ShouldUpdate = true;
         }
@@ -31,10 +31,10 @@ namespace EtherEngine.Camera
         private void Update()
         {
 
-            transform = Matrix.CreateTranslation(new Vector3(-this.postion.X, -this.postion.Y, 0)) *
-                Matrix.CreateRotationZ(this.rotation) *
-                Matrix.CreateScale(new Vector3(zoom, zoom, 1)) *
-                Matrix.CreateTranslation(new Vector3(device.Viewport.Width / 2, device.Viewport.Height / 2, 0));
+            _transform = Matrix.CreateTranslation(new Vector3(-this._postion.X, -this._postion.Y, 0)) *
+                Matrix.CreateRotationZ(this._rotation) *
+                Matrix.CreateScale(new Vector3(_zoom, _zoom, 1)) *
+                Matrix.CreateTranslation(new Vector3(_device.Viewport.Width / 2, _device.Viewport.Height / 2, 0));
 
             // Alternative.
             //var _position = postion - new Vector2(device.Viewport.Width / 2, device.Viewport.Height / 2);
@@ -47,36 +47,36 @@ namespace EtherEngine.Camera
             if (ShouldUpdate) this.Update();
             ShouldUpdate = false;
 
-            return transform;
+            return _transform;
         }
 
         public void Move(Vector2 extent)
         {
-            postion += extent;
+            _postion += extent;
             ShouldUpdate = true;
         }
 
         public void SetZoom(float zoom)
         {
-            this.zoom = zoom;
+            this._zoom = zoom;
             ShouldUpdate = true;
         }
 
         public void SetRotationRadians(float radians)
         {
-            rotation = radians;
+            _rotation = radians;
             ShouldUpdate = true;
         }
 
         public void SetRotationDegrees(float degrees)
         {
-            rotation = degrees * MathF.PI/180;
+            _rotation = degrees * MathF.PI/180;
             ShouldUpdate = true;
         }
 
         public void MoveTo(Vector2 target)
         {
-            postion = target;
+            _postion = target;
             ShouldUpdate = true;
         }
     }

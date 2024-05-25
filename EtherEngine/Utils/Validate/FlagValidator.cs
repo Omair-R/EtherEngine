@@ -29,10 +29,16 @@ namespace EtherEngine.Utils.Validate
         public void Down() => _flag = _defaultDown;
         public void Toggle() => _flag = !_flag;
         public void Throw() =>  throw _exception;
+        public bool GetState() => _flag;
 
         public void Check()
         {
             if (_flag == _defaultDown) throw _exception;
+        }
+
+        public void CheckOpposite()
+        {
+            if (_flag != _defaultDown) throw _exception;
         }
     }
 }

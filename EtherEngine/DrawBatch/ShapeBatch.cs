@@ -1,4 +1,5 @@
 ﻿using EtherEngine.Shapes;
+using EtherEngine.Utils.Validate;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
@@ -12,32 +13,32 @@ namespace EtherEngine.DrawBatch
 {
     public class ShapeBatch : IDrawBatch
     {
-        protected VertexPositionColor[] vertices;
-        protected short[] indices;
+        protected VertexPositionColor[] _vertices;
+        protected short[] _indices;
 
-        protected int verticesCount;
-        protected int indicesCount;
-        protected int maxVerticesCount;
+        protected int _verticesCount;
+        protected int _indicesCount;
+        protected int _maxVerticesCount;
 
-        protected GraphicsDevice device;
-        protected BasicEffect effect;
+        protected GraphicsDevice _device;
+        protected BasicEffect _effect;
 
-        protected bool isStarted;
+        protected FlagValidator _startedValidator;
 
         public float Alpha { get; set; }
 
         public ShapeBatch(GraphicsDevice graphicsDevice, int capacity = 1024, float alpha= 0.5f)
         {
-            this.device = graphicsDevice;
-            this.maxVerticesCount = capacity;
+            this._device = graphicsDevice;
+            this._maxVerticesCount = capacity;
             this.Alpha = alpha;
 
-            vertices = new VertexPositionColor[maxVerticesCount];
-            indices = new short[maxVerticesCount * 3];
+            _vertices = new VertexPositionColor[_maxVerticesCount];
+            _indices = new short[_maxVerticesCount * 3];
 
-            verticesCount = 0;
-            indicesCount = 0;
-            isStarted = false;
+            _verticesCount = 0;
+            _indicesCount = 0;
+            _startedValidator = new FlagValidator(new Exception("This Shape factory has already started."));
         }
 
         public void Begin(RasterizerState rasterizerState = null, 
@@ -45,7 +46,7 @@ namespace EtherEngine.DrawBatch
                 Matrix? transformMatrix = null)
         {
 
-            if (isStarted) throw new Exception("This Shape factory has already started.");
+            _startedValidator.CheckOpposite();
 
             BasicEffect basicEffect = null;
 
@@ -63,54 +64,54 @@ namespace EtherEngine.DrawBatch
                 rasterizerState.CullMode = CullMode.None;
             }
 
-            device.RasterizerState = rasterizerState;
+            _device.RasterizerState = rasterizerState;
 
             if (transformMatrix != null)
             {
-                this.effect.View = (Matrix)transformMatrix;
+                this._effect.View = (Matrix)transformMatrix;
             }
 
 
-            isStarted = true;
+            _startedValidator.Up();
         }
 
         public void End()
         {
-            if (!isStarted) throw new Exception("This Shape factory has started yet, please start it first.");
+            _startedValidator.Check();
 
             Flush();
 
-            isStarted = false;
+            _startedValidator.Down();
         }
 
         public void Flush()
         {
-            device.BlendState = BlendState.AlphaBlend;
+            _device.BlendState = BlendState.AlphaBlend;
 
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                device.DrawUserIndexedPrimitives(
+                _device.DrawUserIndexedPrimitives(
                     PrimitiveType.TriangleList,
-                    vertices,
+                    _vertices,
                     0,
-                    verticesCount,
-                    indices,
+                    _verticesCount,
+                    _indices,
                     0,
-                    indicesCount / 3);
+                    _indicesCount / 3);
             }
 
-            verticesCount = 0;
-            indicesCount = 0;
+            _verticesCount = 0;
+            _indicesCount = 0;
         }
 
         public void SetEffect(BasicEffect effect)
         {
             if (effect == null)
             {
-                Viewport viewport = device.Viewport;
+                Viewport viewport = _device.Viewport;
 
-                this.effect = new BasicEffect(device)
+                this._effect = new BasicEffect(_device)
                 {
                     VertexColorEnabled = true,
                     TextureEnabled = false,
@@ -122,19 +123,19 @@ namespace EtherEngine.DrawBatch
             }
             else
             {
-                this.effect = effect;
+                this._effect = effect;
             }
         }
 
         public void ResetBuffers()
         {
-            verticesCount = 0;
-            indicesCount = 0;
+            _verticesCount = 0;
+            _indicesCount = 0;
         }
 
         private void CheckCapacity(int checkVertices)
         {
-            if (checkVertices > maxVerticesCount) throw new Exception("The number of vertices is higher than the maximum capacity of the vertex buffer."); ;
+            if (checkVertices > _maxVerticesCount) throw new Exception("The number of vertices is higher than the maximum capacity of the vertex buffer."); ;
         }
 
         public void DrawShape(IShape shape, Color color) //TODO: Optimize this
@@ -168,17 +169,17 @@ namespace EtherEngine.DrawBatch
             var bottom_right = new VertexPositionColor(new Vector3(x + width, y, 0), color);
             var top_right = new VertexPositionColor(new Vector3(x + width, y + height, 0), color);
 
-            indices[indicesCount++] = (short)(0 + verticesCount);
-            indices[indicesCount++] = (short)(1 + verticesCount);
-            indices[indicesCount++] = (short)(2 + verticesCount);
-            indices[indicesCount++] = (short)(0 + verticesCount);
-            indices[indicesCount++] = (short)(2 + verticesCount);
-            indices[indicesCount++] = (short)(3 + verticesCount);
+            _indices[_indicesCount++] = (short)(0 + _verticesCount);
+            _indices[_indicesCount++] = (short)(1 + _verticesCount);
+            _indices[_indicesCount++] = (short)(2 + _verticesCount);
+            _indices[_indicesCount++] = (short)(0 + _verticesCount);
+            _indices[_indicesCount++] = (short)(2 + _verticesCount);
+            _indices[_indicesCount++] = (short)(3 + _verticesCount);
 
-            vertices[verticesCount++] = top_left;
-            vertices[verticesCount++] = bottom_left;
-            vertices[verticesCount++] = bottom_right;
-            vertices[verticesCount++] = top_right;
+            _vertices[_verticesCount++] = top_left;
+            _vertices[_verticesCount++] = bottom_left;
+            _vertices[_verticesCount++] = bottom_right;
+            _vertices[_verticesCount++] = top_right;
         }
 
         virtual public void DrawRectangle(StaticQuad quad, Color color)
@@ -195,14 +196,14 @@ namespace EtherEngine.DrawBatch
 
             for (int i = 0; i < triangleCount; i++)
             {
-                indices[indicesCount++] = (short)(0 + verticesCount);
-                indices[indicesCount++] = (short)(i + 1 + verticesCount);
-                indices[indicesCount++] = (short)(i + 2 + verticesCount);
+                _indices[_indicesCount++] = (short)(0 + _verticesCount);
+                _indices[_indicesCount++] = (short)(i + 1 + _verticesCount);
+                _indices[_indicesCount++] = (short)(i + 2 + _verticesCount);
             }
 
             for (int i = 0; i < quadVertices.Length; i++)
             {
-                vertices[verticesCount++] = new VertexPositionColor(new Vector3(quadVertices[i], 0), color);
+                _vertices[_verticesCount++] = new VertexPositionColor(new Vector3(quadVertices[i], 0), color);
             };
         }
 
@@ -217,9 +218,9 @@ namespace EtherEngine.DrawBatch
 
             for (int i = 0; i < triangleCount; i++)
             {
-                indices[indicesCount++] = (short)(0 + verticesCount);
-                indices[indicesCount++] = (short)(i + 1 + verticesCount);
-                indices[indicesCount++] = (short)(i + 2 + verticesCount);
+                _indices[_indicesCount++] = (short)(0 + _verticesCount);
+                _indices[_indicesCount++] = (short)(i + 1 + _verticesCount);
+                _indices[_indicesCount++] = (short)(i + 2 + _verticesCount);
             }
 
             float drawingAngle = MathF.Tau / resolution;
@@ -227,7 +228,7 @@ namespace EtherEngine.DrawBatch
 
             for (int i = 0; i < resolution; i++)
             {
-                vertices[verticesCount++] = new VertexPositionColor(new Vector3(radius * MathF.Cos(drawingAngle * i) + circle.Center.X,
+                _vertices[_verticesCount++] = new VertexPositionColor(new Vector3(radius * MathF.Cos(drawingAngle * i) + circle.Center.X,
                                                                                     radius * MathF.Sin(drawingAngle * i) + circle.Center.Y,
                                                                                     0),
                                                                                     color);
@@ -242,14 +243,14 @@ namespace EtherEngine.DrawBatch
 
             for (int i = 0; i < triangleCount; i++)
             {
-                indices[indicesCount++] = (short)(0 + verticesCount);
-                indices[indicesCount++] = (short)(i + 1 + verticesCount);
-                indices[indicesCount++] = (short)(i + 2 + verticesCount);
+                _indices[_indicesCount++] = (short)(0 + _verticesCount);
+                _indices[_indicesCount++] = (short)(i + 1 + _verticesCount);
+                _indices[_indicesCount++] = (short)(i + 2 + _verticesCount);
             }
 
             for (int i = 0; i < polygon.Vertices.Length; i++)
             {
-                vertices[verticesCount++] = new VertexPositionColor(new Vector3(polygon.Vertices[i], 0), color);
+                _vertices[_verticesCount++] = new VertexPositionColor(new Vector3(polygon.Vertices[i], 0), color);
             };
         }
     }

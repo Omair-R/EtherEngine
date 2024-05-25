@@ -12,7 +12,7 @@ namespace EtherEngine.Collision
         
         public CircleCollision(Circle circle, CollisionLayer layer=null): base(layer)
         {
-            this.type = CollisionTypes.Circle;
+            this._type = CollisionTypes.Circle;
             this.InnerShape = circle;
         }
 

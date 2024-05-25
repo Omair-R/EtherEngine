@@ -13,7 +13,7 @@ namespace EtherEngine.Collision
     {
         public PolygonCollision(Polygon polygon, CollisionLayer layer = null) : base(layer)
         {
-            this.type = CollisionTypes.Polygon;
+            this._type = CollisionTypes.Polygon;
             this.InnerShape = polygon;
         }
         protected override bool CheckCircleCollision(ICollision other, out Contact contact)

@@ -5,48 +5,48 @@ namespace EtherEngine.Shapes
 {
     public class StaticQuad :IShape
     {
-        protected Vector2[] vertices = new Vector2[4];
-        protected float x;
-        protected float y;
-        protected float width;
-        protected float height;
+        protected Vector2[] _vertices = new Vector2[4];
+        protected float _x;
+        protected float _y;
+        protected float _width;
+        protected float _height;
 
         public Vector2[] Vertices
         {
-            get { return vertices; }
+            get { return _vertices; }
 
         }
 
         public float X { 
-            get => x; 
+            get => _x; 
             set 
             { 
-                x = value;
+                _x = value;
                 SetVertices();
             } 
         }
 
         public float Y { 
-            get => y; 
+            get => _y; 
             set
             {
-                y = value;
+                _y = value;
                 SetVertices();
             }
         }
         public float Width { 
-            get => width;
+            get => _width;
             set
             {
-                width = value;
+                _width = value;
                 SetVertices();
             }
         }
         public float Height { 
-            get => height;
+            get => _height;
             set
             {
-                height = value;
+                _height = value;
                 SetVertices();
             }
         }
@@ -105,10 +105,10 @@ namespace EtherEngine.Shapes
         protected void SetVertices()
         {
             
-            vertices[0] = new Vector2(X - Width / 2, Y - Height / 2);
-            vertices[1] = new Vector2(X + Width / 2, Y - Height / 2);
-            vertices[2] = new Vector2(X + Width / 2, Y + Height / 2);
-            vertices[3] = new Vector2(X - Width / 2, Y + Height / 2);
+            _vertices[0] = new Vector2(X - Width / 2, Y - Height / 2);
+            _vertices[1] = new Vector2(X + Width / 2, Y - Height / 2);
+            _vertices[2] = new Vector2(X + Width / 2, Y + Height / 2);
+            _vertices[3] = new Vector2(X - Width / 2, Y + Height / 2);
         }
 
         public bool ContainsPoint(Vector2 point)

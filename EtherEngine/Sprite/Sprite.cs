@@ -1,4 +1,5 @@
 ﻿using EtherEngine.Shapes;
+using EtherEngine.Utils.Validate;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,7 +8,7 @@ using System.Diagnostics;
 
 namespace EtherEngine.Sprite
 {
-    public class TexturedSprite
+    public class Sprite
     {
         private string _textureName;
         private Texture2D _texture;
@@ -19,6 +20,7 @@ namespace EtherEngine.Sprite
         public Vector2 Scale { get; set; }
         public float Rotation { get; set; }
         public Color Color { get; set; }
+
         private float _alpha;
         public float Alpha { get => _alpha; set { 
                 _alpha = value;
@@ -27,10 +29,12 @@ namespace EtherEngine.Sprite
         }
         public SpriteEffects Effect { get; set; }
 
-        private bool isLoaded;
-        private bool isFlipped;
+        private FlagValidator _loadValidator;
 
-        public TexturedSprite(string textureName, 
+        public Flag FlippedH { get; private set; }
+        public Flag FlippedV { get; private set; }
+
+        public Sprite(string textureName, 
             Rectangle srcRect,
             Vector2 center, 
             Vector2 scale, 
@@ -54,12 +58,15 @@ namespace EtherEngine.Sprite
             _layerDepth = layerDepth;
             Effect = spriteEffect;
 
-            isLoaded = false;
-            isFlipped = false;
+            _loadValidator = new FlagValidator(new ContentLoadException("The sprite was not loaded yet, please load the sprite first."));
 
+            FlippedH = new Flag();
+            FlippedV = new Flag();
+            FlippedH.FlagChanged += OnFlipHorizontally;
+            FlippedV.FlagChanged += OnFlipVertically;
         }
 
-        public TexturedSprite(string textureName,
+        public Sprite(string textureName,
             Vector2 center,
             Vector2 scale,
             Color color,
@@ -70,7 +77,7 @@ namespace EtherEngine.Sprite
             : this(textureName, Rectangle.Empty, center, scale, color,alpha, rotation, layerDepth, spriteEffect)
         { }
 
-        public TexturedSprite(string textureName,
+        public Sprite(string textureName,
             Vector2 center,
             Vector2 scale,
             float alpha = 1f,
@@ -86,34 +93,36 @@ namespace EtherEngine.Sprite
                                                                     (int)(Center.Y - Scale.Y / 2), 
                                                                     (int)Scale.X, 
                                                                     (int)Scale.Y);
-        public void FlipHorizontally()
+
+        private void OnFlipHorizontally(object sender, EventArgs e)
         {
-            if (isFlipped)
-                Effect = SpriteEffects.None;
+            if (FlippedH.GetState())
+                Effect |= SpriteEffects.FlipHorizontally;
             else
-            {
-                Effect = SpriteEffects.FlipHorizontally;
-                isFlipped = true;
-            }    
+                Effect = Effect & ~SpriteEffects.FlipHorizontally;
         }
-            
+
+        public void OnFlipVertically(object sender, EventArgs e)
+        {
+            if (FlippedV.GetState())
+                Effect |= SpriteEffects.FlipVertically;
+            else
+                Effect = Effect & ~SpriteEffects.FlipVertically;
+        }
+
         virtual public void Load(ContentManager contentManager)
         {
             _texture = contentManager.Load<Texture2D>(_textureName);
             if (_srcRect == Rectangle.Empty)
                 _srcRect = new Rectangle(0, 0, _texture.Width, _texture.Height);
-            isLoaded = true;
+            _loadValidator.Up();
         }
 
-        virtual public void Draw(GraphicsResource spriteBatch)
+        virtual public void Draw(SpriteBatch spriteBatch)
         {
-            Debug.Assert(isLoaded);
+            _loadValidator.Check();
 
-            var _spriteBatch = spriteBatch as SpriteBatch;
-
-            Debug.Assert(_spriteBatch != null);
-
-            _spriteBatch.Draw(
+            spriteBatch.Draw(
                 _texture,
                 GetDestinationRectangle(),
                 _srcRect,

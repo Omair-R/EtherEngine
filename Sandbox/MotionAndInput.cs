@@ -18,7 +18,7 @@ namespace Sandbox
 {
     public class MotionAndInput : ITestScene
     {
-        private TexturedSprite _sprite;
+        private Sprite _sprite;
         private IMotion _motion;
         private KeyboardManager keyboardManager;
 
@@ -45,7 +45,7 @@ namespace Sandbox
 
         public void Initialize(GraphicsDevice graphicsDevice)
         {
-            _sprite = new TexturedSprite(
+            _sprite = new Sprite(
                 "Fall",
                 new Vector2(60, 180),
                 new Vector2(100, 100),
@@ -53,7 +53,7 @@ namespace Sandbox
             //_motion = new MasslessMotion(400, 1000, 0.1f);
             _motion = new PIDMotion(200f, 20, 2f, 5f, 3f);
             //_motion = new DragMotion(200f, 0.8f, DragTypes.QuadraticDrag);
-            keyboardManager = KeyboardManager.GetInstance;
+            keyboardManager = KeyboardManager.Instance;
         }
 
         public void LoadContent(ContentManager content)

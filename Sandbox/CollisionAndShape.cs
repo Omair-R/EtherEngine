@@ -21,7 +21,7 @@ namespace Sandbox
 {
     internal class CollisionAndShape : ITestScene
     {
-        private TexturedSprite _sprite;
+        private Sprite _sprite;
         private CircleCollision _spriteCollision;
 
         private IMotion _motion;
@@ -57,7 +57,7 @@ namespace Sandbox
 
         public void Initialize(GraphicsDevice graphicsDevice)
         {
-            _sprite = new TexturedSprite(
+            _sprite = new Sprite(
                 "Fall",
                 new Vector2(400, 180),
                 new Vector2(100, 100),
@@ -72,7 +72,7 @@ namespace Sandbox
 
             camera = new PositionalCamera(_sprite.Center, 0f, 1.0f, graphicsDevice);
 
-            keyboardManager = KeyboardManager.GetInstance;
+            keyboardManager = KeyboardManager.Instance;
         }
 
         public void PrintSomething(object sender, CollisionEventArgs args)

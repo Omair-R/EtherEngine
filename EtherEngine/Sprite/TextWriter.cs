@@ -25,10 +25,15 @@ namespace EtherEngine.Sprite
             _loadValidator.Up();
         }
 
-        public void Write(string text, Vector2 position, Color color, SpriteBatch spriteBatch)
+        public void Write(SpriteBatch spriteBatch, string text, Vector2 position, Color color, float rotation=0f, Vector2? origin =null, float scale=1f, float layerDepth= 1f)
         {
             _loadValidator.Check();
-            spriteBatch.DrawString(_font, text, position, color);
+
+            Vector2 origin_ = Vector2.Zero;
+            if (origin != null)
+                origin_ = (Vector2)origin;
+
+            spriteBatch.DrawString(_font, text, position, color, rotation, origin_, scale, SpriteEffects.None, );
         }
     }
 }

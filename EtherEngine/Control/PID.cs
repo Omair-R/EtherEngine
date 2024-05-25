@@ -11,11 +11,11 @@ namespace EtherEngine.Control
 
         public float Epsilon { get; set; } = 0.00004f;
 
-        private float previousError = 0.0f;
-        private float accumulatedIntegral = 0.0f;
+        private float _previousError = 0.0f;
+        private float _accumulatedIntegral = 0.0f;
 
-        private bool enableDerivative = false;
-        private bool enableIntegral = false;
+        private bool _enableDerivative = false;
+        private bool _enableIntegral = false;
         
 
         public PID(float proportionalGain, float? integralGain = null, float? derivativeGain = null) 
@@ -23,15 +23,15 @@ namespace EtherEngine.Control
             ProportionalGain = proportionalGain;
             if (integralGain != null)
             {
-                enableIntegral = true;
-                accumulatedIntegral = 0.0f; 
+                _enableIntegral = true;
+                _accumulatedIntegral = 0.0f; 
                 IntegralGain = integralGain;
             }
 
             if (derivativeGain != null)
             {
-                enableDerivative = true;
-                previousError = 0.0f;
+                _enableDerivative = true;
+                _previousError = 0.0f;
                 DerivativeGain = derivativeGain;
             }
         }
@@ -41,16 +41,16 @@ namespace EtherEngine.Control
             float error = targetValue - currentValue;
             float gain = ProportionalGain * error; 
 
-            if (enableDerivative)
+            if (_enableDerivative)
             {
-                float derivative = (error - previousError)/ ((float)gameTime.ElapsedGameTime.TotalSeconds + Epsilon); 
+                float derivative = (error - _previousError)/ ((float)gameTime.ElapsedGameTime.TotalSeconds + Epsilon); 
                 gain += (float)DerivativeGain * derivative;
             }
 
-            if (enableIntegral)
+            if (_enableIntegral)
             {
-                accumulatedIntegral += error * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                gain += (float)IntegralGain * accumulatedIntegral;
+                _accumulatedIntegral += error * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                gain += (float)IntegralGain * _accumulatedIntegral;
             }
 
             return gain;

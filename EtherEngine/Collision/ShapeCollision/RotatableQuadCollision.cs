@@ -11,7 +11,7 @@ namespace EtherEngine.Collision
 
         public RotatableQuadCollision(RotatableQuad quad, CollisionLayer layer = null) : base(layer)
         {
-            this.type = CollisionTypes.RotatableQuad;
+            this._type = CollisionTypes.RotatableQuad;
             this.InnerShape = quad;
         }
         protected override bool CheckCircleCollision(ICollision other, out Contact contact)

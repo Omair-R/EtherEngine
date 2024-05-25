@@ -12,7 +12,7 @@ namespace EtherEngine.Particle
     {
         private ParticlePool _pool;
 
-        public TexturedSprite Sprite; //TODO: Change this.
+        public Sprite.Sprite Sprite; //TODO: Change this.
 
         public Vector2 Position;
         public Vector2 Velocity;

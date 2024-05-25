@@ -18,17 +18,17 @@ namespace EtherEngine.Particle
 
         private ParticlePool _particlePool;
 
-        private readonly RandomSinglton _Random = RandomSinglton.GetInstance;
-        private TexturedSprite _sprite;
+        private readonly RandomSinglton _Random = RandomSinglton.Instance;
+        private Sprite.Sprite _sprite;
 
         private float _count = 0;
-        public ParticleEmitter(TexturedSprite texturedSprite,int amount, float interval, int capacity, EmittionInstruction instruction) 
+        public ParticleEmitter(in Sprite.Sprite sprite,int amount, float interval, int capacity, EmittionInstruction instruction) 
         {
             Amount = amount;
             IntervalSeconds = interval;
             EmittionInstruction = instruction;
             _particlePool = new ParticlePool(capacity);
-            _sprite = texturedSprite;
+            _sprite = sprite;
         }
 
         public void Update(GameTime gameTime)

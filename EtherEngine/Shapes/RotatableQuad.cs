@@ -10,44 +10,52 @@ namespace EtherEngine.Shapes
 {
     public class RotatableQuad : StaticQuad
     {
-        private float rotation;
+        private float _rotation;
         public float Rotation
         {
-            get { return rotation; }
+            get { return _rotation; }
             set
             {
-                rotation = value;
-                sin = MathF.Sin(rotation);
-                cos = MathF.Cos(rotation);
+                _rotation = value;
+                _sin = MathF.Sin(_rotation);
+                _cos = MathF.Cos(_rotation);
 
-                normals[0].X = sin; //vector pointing up + rotation
-                normals[0].Y = -cos;
+                _normals[0].X = _sin; //vector pointing up + rotation
+                _normals[0].Y = -_cos;
 
-                normals[1].X = cos; // vector pointing right + rotation
-                normals[1].Y = sin;
+                _normals[1].X = _cos; // vector pointing right + rotation
+                _normals[1].Y = _sin;
 
                 SetVertices();
             }
         }
 
 
-        private float sin;
-        private float cos;
-        private Vector2[] normals;
+        private float _sin;
+        private float _cos;
+        private Vector2[] _normals;
 
-        public Vector2[] Normals { get { return normals; } }
+        public Vector2[] Normals { get { return _normals; } }
 
         public RotatableQuad(float x, float y, float width, float height, float rotation=0.0f) :
             base(x, y, width, height)
         {
-            normals = new Vector2[2];
-            normals[0] = Vector2.Zero;
-            normals[1] = Vector2.Zero; //initialize the normals to avoid allocation.
+            _normals = new Vector2[2];
+            _normals[0] = Vector2.Zero;
+            _normals[1] = Vector2.Zero; //initialize the normals to avoid allocation.
+
+            _vertices[0] = new Vector2(-Width / 2, -Height / 2);
+            _vertices[1] = new Vector2(Width / 2, -Height / 2);
+            _vertices[2] = new Vector2(Width / 2, Height / 2);
+            _vertices[3] = new Vector2(-Width / 2, Height / 2);
             this.Rotation = rotation;
         }
 
         public RotatableQuad(Vector2 center, float width, float height, float rotation = 0.0f) : 
             this(center.X, center.Y, width, height, rotation){}
+
+        public RotatableQuad(StaticQuad quad, float rotation = 0.0f) :
+            this(quad.X, quad.Y, quad.Width, quad.Height, rotation){ }
 
         public  new Vector2 GetMin()
         {
@@ -62,20 +70,20 @@ namespace EtherEngine.Shapes
         protected new void SetVertices()
         {
             //TODO: Optimize this.
-            vertices[0] = new Vector2(-Width / 2, -Height / 2);
-            vertices[1] = new Vector2(Width / 2, -Height / 2);
-            vertices[2] = new Vector2(Width / 2, Height / 2);
-            vertices[3] = new Vector2(-Width / 2, Height / 2);
+            _vertices[0] = new Vector2(-Width / 2, -Height / 2);
+            _vertices[1] = new Vector2(Width / 2, -Height / 2);
+            _vertices[2] = new Vector2(Width / 2, Height / 2);
+            _vertices[3] = new Vector2(-Width / 2, Height / 2);
 
             float transX;
             float transY;
 
             for (int i = 0; i < 4; i++)
             {
-                transX = vertices[i].X * cos - vertices[i].Y * sin;
-                transY = vertices[i].X * sin + vertices[i].Y * cos;
-                vertices[i].X = X + transX;
-                vertices[i].Y = Y + transY;
+                transX = _vertices[i].X * _cos - _vertices[i].Y * _sin;
+                transY = _vertices[i].X * _sin + _vertices[i].Y * _cos;
+                _vertices[i].X = X + transX;
+                _vertices[i].Y = Y + transY;
             }
         }
 
@@ -84,11 +92,11 @@ namespace EtherEngine.Shapes
            
             point -= GetCenter();
 
-            float pointProjection = MathF.Abs(Vector2.Dot(point, normals[0]));
+            float pointProjection = MathF.Abs(Vector2.Dot(point, _normals[0]));
             if (Width/2 < pointProjection)
                 return false;
 
-            pointProjection = MathF.Abs(Vector2.Dot(point, normals[1]));
+            pointProjection = MathF.Abs(Vector2.Dot(point, _normals[1]));
             if (Height / 2 < pointProjection)
                 return false;
 

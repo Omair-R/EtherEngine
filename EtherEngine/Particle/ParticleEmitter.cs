@@ -70,6 +70,7 @@ namespace EtherEngine.Particle
                 ApplyVariance(EmittionInstruction.Position, EmittionInstruction.Spread, out particle.Position);
                 ApplyVariance(EmittionInstruction.InitVelocity, EmittionInstruction.InitVelocityVariance, out particle.Velocity);
                 particle.Acceleration = EmittionInstruction.Acceleration;
+                particle.TangentialAcceleration = EmittionInstruction.TangentialAcceleration;
                 particle.Damping = EmittionInstruction.Damping;
 
                 ApplyVariance(EmittionInstruction.Angle, EmittionInstruction.AngleVariance, out particle.Angle);

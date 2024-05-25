@@ -119,7 +119,7 @@ namespace EtherEngine.Sprite
                 _srcRect,
                 Color,
                 Rotation,
-                new Vector2(0, 0),
+                new Vector2(Scale.X/2, Scale.Y/2),
                 Effect,
                 _layerDepth);
         }

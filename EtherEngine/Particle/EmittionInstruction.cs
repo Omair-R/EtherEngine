@@ -2,7 +2,7 @@
 
 namespace EtherEngine.Particle
 {
-    public class EmittionInstruction
+    public record EmittionInstruction
     {
         public Vector2 Position { get; set; }
         public Vector2 Spread { get; set; }
@@ -11,6 +11,7 @@ namespace EtherEngine.Particle
         public float InitVelocityVariance { get; set; }
 
         public Vector2 Acceleration { get; set; }
+        public Vector2 TangentialAcceleration { get; set; }
         public float Damping { get; set; }
 
         public float Angle { get; set; }
@@ -32,50 +33,6 @@ namespace EtherEngine.Particle
 
         public float LifeTime { get; set; }
         public float LifeTimeVariance { get; set; }
-
-
-
-        public EmittionInstruction(Vector2 position,
-                                   Vector2 spread,
-                                   Vector2 initVelocity,
-                                   float initVelocityVariance,
-                                   Vector2 acceleration,
-                                   float damping,
-                                   float angle,
-                                   float angleVariance,
-                                   float angularVelocity,
-                                   float scaleBegin,
-                                   float scaleEnd,
-                                   float scaleVariance,
-                                   Color colorBegin,
-                                   Color colorEnd,
-                                   float hueVairance,
-                                   float alphaBegin,
-                                   float alphaEnd,
-                                   float alphaVariance,
-                                   float lifeTime,
-                                   float lifeTimeVariance)
-        {
-            Position = position;
-            Spread = spread;
-            InitVelocity = initVelocity;
-            InitVelocityVariance = initVelocityVariance;
-            Acceleration = acceleration;
-            Damping = damping;
-            Angle = angle;
-            AngleVariance = angleVariance;
-            AngularVelocity = angularVelocity;
-            ScaleBegin = scaleBegin;
-            ScaleEnd = scaleEnd;
-            ScaleVariance = scaleVariance;
-            ColorBegin = colorBegin;
-            ColorEnd = colorEnd;
-            HueVairance = hueVairance;
-            AlphaBegin = alphaBegin;
-            AlphaEnd = alphaEnd;
-            AlphaVariance = alphaVariance;
-            LifeTime = lifeTime;
-            LifeTimeVariance = lifeTimeVariance;
-        }
+        
     }
 }

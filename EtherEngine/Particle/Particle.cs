@@ -1,4 +1,5 @@
 ﻿using EtherEngine.Sprite;
+using EtherEngine.Utils;
 using EtherEngine.Utils.Random;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,6 +18,7 @@ namespace EtherEngine.Particle
         public Vector2 Velocity;
 
         public Vector2 Acceleration;
+        public Vector2 TangentialAcceleration;
         public float Damping;
 
         public float Angle;
@@ -56,7 +58,12 @@ namespace EtherEngine.Particle
         public void Update(GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            var norm = MathUtils.Normalize(Velocity);
+            Acceleration.X += TangentialAcceleration.Y * dt * -norm.Y;
+            Acceleration.Y += TangentialAcceleration.X * dt * norm.X;
             Velocity += Acceleration * dt - Damping * Velocity;
+
             Position += Velocity * dt;
 
             Angle += AngularVelocity * dt;

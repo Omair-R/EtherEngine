@@ -1,5 +1,4 @@
 ﻿using EtherEngine.Collision.Models;
-using EtherEngine.Entity;
 using EtherEngine.Shapes;
 using EtherEngine.Utils;
 using System;
@@ -20,7 +19,7 @@ namespace EtherEngine.Collision
             } 
         }
         public CollisionLayer Layer { get; set; }
-        public IEntity ParentEntity { get; set; }
+        public EtherEntity ParentEntity { get; set; }
         public bool Enable { get; set; }
 
         public void OnIntersectionHappened(CollisionEventArgs e) => EventUtils.Invoke(CollisionOccured, this, e);

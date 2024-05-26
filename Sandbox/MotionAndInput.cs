@@ -45,11 +45,11 @@ namespace Sandbox
 
         public void Initialize(GraphicsDevice graphicsDevice)
         {
-            _sprite = new Sprite(
-                "Fall",
-                new Vector2(60, 180),
-                new Vector2(100, 100),
-                Color.White);
+            //_sprite = new Sprite(
+            //    "Fall",
+            //    new Vector2(60, 180),
+            //    new Vector2(100, 100),
+            //    Color.White);
             //_motion = new MasslessMotion(400, 1000, 0.1f);
             _motion = new PIDMotion(200f, 20, 2f, 5f, 3f);
             //_motion = new DragMotion(200f, 0.8f, DragTypes.QuadraticDrag);
@@ -58,7 +58,7 @@ namespace Sandbox
 
         public void LoadContent(ContentManager content)
         {
-            _sprite.Load(content);
+            //_sprite.Load(content);
         }
 
         public void Update(GameTime gameTime)

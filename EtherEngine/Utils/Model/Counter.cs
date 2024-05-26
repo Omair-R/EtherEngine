@@ -17,8 +17,7 @@ namespace EtherEngine.Utils
         public bool IsFinished { get; private set; }
         public bool IsActive { get; private set; }
 
-        public event EventHandler<EventArgs> Finished; 
-
+        public event EventHandler<EventArgs> Finished;
 
         public Counter(float duration)
         {
@@ -29,7 +28,9 @@ namespace EtherEngine.Utils
             IsFinished = false;
             IsActive = false;
         }
-        public void Start()
+        public void Start() => Reset();
+
+        public void Reset()
         {
             _remainingTime = _duration;
             IsStarted = true;
@@ -40,17 +41,19 @@ namespace EtherEngine.Utils
         public void Pause() => IsActive = false;
         public void UnPause() => IsActive = true;
 
+        public float GetProgress() => _duration - _remainingTime;
+        public float GetRemaining() => _remainingTime;
+
         public void Update(GameTime gameTime)
         {
             Debug.Assert(IsStarted);
 
-            
             if (!IsActive) return;
 
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _remainingTime -= dt;
 
-            if ( _remainingTime <= 0 )
+            if (_remainingTime <= 0)
             {
                 IsFinished = true;
                 IsActive = false;

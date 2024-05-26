@@ -33,7 +33,7 @@ namespace EtherEngine.Sprite
             if (origin != null)
                 origin_ = (Vector2)origin;
 
-            spriteBatch.DrawString(_font, text, position, color, rotation, origin_, scale, SpriteEffects.None, );
+            spriteBatch.DrawString(_font, text, position, color, rotation, origin_, scale, SpriteEffects.None, layerDepth);
         }
     }
 }

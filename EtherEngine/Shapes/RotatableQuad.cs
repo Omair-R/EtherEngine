@@ -37,6 +37,8 @@ namespace EtherEngine.Shapes
 
         public Vector2[] Normals { get { return _normals; } }
 
+        private Vector2[] _unmovedVertices;
+
         public RotatableQuad(float x, float y, float width, float height, float rotation=0.0f) :
             base(x, y, width, height)
         {
@@ -44,10 +46,13 @@ namespace EtherEngine.Shapes
             _normals[0] = Vector2.Zero;
             _normals[1] = Vector2.Zero; //initialize the normals to avoid allocation.
 
-            _vertices[0] = new Vector2(-Width / 2, -Height / 2);
-            _vertices[1] = new Vector2(Width / 2, -Height / 2);
-            _vertices[2] = new Vector2(Width / 2, Height / 2);
-            _vertices[3] = new Vector2(-Width / 2, Height / 2);
+            _unmovedVertices = new Vector2[4] {
+                    new Vector2(-width / 2, -height / 2),
+                    new Vector2(width / 2, -height / 2),
+                    new Vector2(width / 2, height / 2),
+                    new Vector2(-width / 2, height / 2),
+            }; // This is to avoid allocation every time the quad moves.
+
             this.Rotation = rotation;
         }
 
@@ -70,10 +75,10 @@ namespace EtherEngine.Shapes
         protected new void SetVertices()
         {
             //TODO: Optimize this.
-            _vertices[0] = new Vector2(-Width / 2, -Height / 2);
-            _vertices[1] = new Vector2(Width / 2, -Height / 2);
-            _vertices[2] = new Vector2(Width / 2, Height / 2);
-            _vertices[3] = new Vector2(-Width / 2, Height / 2);
+            _vertices[0] = _unmovedVertices[0];
+            _vertices[1] = _unmovedVertices[1];
+            _vertices[2] = _unmovedVertices[2];
+            _vertices[3] = _unmovedVertices[3];
 
             float transX;
             float transY;

@@ -10,7 +10,6 @@ namespace EtherEngine.Sprite
 {
     public class Sprite
     {
-        private string _textureName;
         private Texture2D _texture;
 
         private Rectangle _srcRect;
@@ -19,6 +18,7 @@ namespace EtherEngine.Sprite
         public Vector2 Center { get; set; }
         public Vector2 Scale { get; set; }
         public float Rotation { get; set; }
+
         public Color Color { get; set; }
 
         private float _alpha;
@@ -29,12 +29,10 @@ namespace EtherEngine.Sprite
         }
         public SpriteEffects Effect { get; set; }
 
-        private FlagValidator _loadValidator;
-
         public Flag FlippedH { get; private set; }
         public Flag FlippedV { get; private set; }
 
-        public Sprite(string textureName, 
+        public Sprite(Texture2D texture, 
             Rectangle srcRect,
             Vector2 center, 
             Vector2 scale, 
@@ -44,12 +42,8 @@ namespace EtherEngine.Sprite
             float layerDepth = 0f,
             SpriteEffects spriteEffect= SpriteEffects.None) 
         {
-            if (string.IsNullOrEmpty(textureName))
-            {
-                throw new ArgumentException($"'{nameof(textureName)}' cannot be null or empty.", nameof(textureName));
-            }
 
-            _textureName = textureName;
+            _texture = texture;
             _srcRect = srcRect;
             Center = center;
             Scale = scale;
@@ -58,7 +52,8 @@ namespace EtherEngine.Sprite
             _layerDepth = layerDepth;
             Effect = spriteEffect;
 
-            _loadValidator = new FlagValidator(new ContentLoadException("The sprite was not loaded yet, please load the sprite first."));
+            if (_srcRect == Rectangle.Empty)
+                _srcRect = new Rectangle(0, 0, _texture.Width, _texture.Height);
 
             FlippedH = new Flag();
             FlippedV = new Flag();
@@ -66,7 +61,7 @@ namespace EtherEngine.Sprite
             FlippedV.FlagChanged += OnFlipVertically;
         }
 
-        public Sprite(string textureName,
+        public Sprite(Texture2D texture,
             Vector2 center,
             Vector2 scale,
             Color color,
@@ -74,17 +69,17 @@ namespace EtherEngine.Sprite
             float rotation = 0f,
             float layerDepth = 0f,
             SpriteEffects spriteEffect = SpriteEffects.None)
-            : this(textureName, Rectangle.Empty, center, scale, color,alpha, rotation, layerDepth, spriteEffect)
+            : this(texture, Rectangle.Empty, center, scale, color,alpha, rotation, layerDepth, spriteEffect)
         { }
 
-        public Sprite(string textureName,
+        public Sprite(Texture2D texture,
             Vector2 center,
             Vector2 scale,
             float alpha = 1f,
             float rotation = 0f,
             float layerDepth = 0f,
             SpriteEffects spriteEffect = SpriteEffects.None)
-            : this(textureName, Rectangle.Empty, center, scale, Color.White, alpha, rotation, layerDepth, spriteEffect)
+            : this(texture, Rectangle.Empty, center, scale, Color.White, alpha, rotation, layerDepth, spriteEffect)
         { }
 
         public StaticQuad GetStaticQuad() => new StaticQuad(Center, Scale.X, Scale.Y);
@@ -110,18 +105,8 @@ namespace EtherEngine.Sprite
                 Effect = Effect & ~SpriteEffects.FlipVertically;
         }
 
-        virtual public void Load(ContentManager contentManager)
-        {
-            _texture = contentManager.Load<Texture2D>(_textureName);
-            if (_srcRect == Rectangle.Empty)
-                _srcRect = new Rectangle(0, 0, _texture.Width, _texture.Height);
-            _loadValidator.Up();
-        }
-
         virtual public void Draw(SpriteBatch spriteBatch)
         {
-            _loadValidator.Check();
-
             spriteBatch.Draw(
                 _texture,
                 GetDestinationRectangle(),

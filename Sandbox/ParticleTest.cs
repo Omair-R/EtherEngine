@@ -15,51 +15,56 @@ namespace Sandbox
         EmittionInstruction emittionInstruction;
         KeyboardManager keyboardManager;
         Sprite texturedSprite;
-        
+
+        Texture2D texture;
+
+
         public void Initialize(GraphicsDevice graphicsDevice)
         {
             keyboardManager = KeyboardManager.Instance;
+            texture = new Texture2D(graphicsDevice, 1, 1);
+        }
+
+        public void LoadContent(ContentManager content)
+        {
+            texture = content.Load<Texture2D>("fall");
             emittionInstruction = new EmittionInstruction()
             {
                 Position = new Vector2(400, 300),
-                Spread = new Vector2(100, 50),
+                Spread = new Vector2(100, 5),
 
-                InitVelocity = new Vector2(0,0),
+                InitVelocity = new Vector2(0, 0),
                 InitVelocityVariance = 0,
 
                 Acceleration = new Vector2(0, -1000),
-                TangentialAcceleration = new Vector2(500, -500),
-                Damping = 0.1f,
+                TangentialAcceleration = new Vector2(0, 0),
+                Damping = 0.2f,
 
                 Angle = 1.5f,
                 AngleVariance = 2f,
                 AngularVelocity = 1,
 
-                ScaleBegin = 20,
-                ScaleEnd = 5,
+                ScaleBegin = 30,
+                ScaleEnd = 2,
                 ScaleVariance = 5,
 
 
-                ColorBegin = Color.Yellow,
+                ColorBegin = Color.Green,
                 ColorEnd = Color.Red,
                 HueVairance = 1,
 
-                AlphaBegin = 0.7f,
+                AlphaBegin = 0.8f,
                 AlphaEnd = 0.05f,
-                AlphaVariance = 0.3f,
+                AlphaVariance = 0.5f,
 
-                LifeTime = 2,
+                LifeTime = 1,
                 LifeTimeVariance = 0.8f,
 
             };
 
-            texturedSprite = new Sprite("Fall", Vector2.One,Vector2.One);
-            emitter = new ParticleEmitter(texturedSprite, 50, 0.1f, 150, emittionInstruction);
-        }
 
-        public void LoadContent(ContentManager content)
-        {
-            texturedSprite.Load(content);
+            texturedSprite = new Sprite(texture, Vector2.One, Vector2.One);
+            emitter = new ParticleEmitter(texturedSprite, 10000, 0.5f, 1000, emittionInstruction);
         }
 
         public void Update(GameTime gameTime)

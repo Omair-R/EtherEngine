@@ -4,31 +4,27 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System;
 using Microsoft.Xna.Framework.Content;
+using EtherEngine.Utils.Validate;
 
 namespace EtherEngine.Animation
 {
     public class AnimationController
     {
-        private string _textureName;
         private Texture2D _texture;
         private SpriteEffect _spriteEffect;
         private Dictionary<string, Animation> _animationDict;
         private Animation _currentAnimation;
 
-        public AnimationController(string textureName, SpriteEffect spriteEffect=null)
+        public AnimationController(Texture2D texture, SpriteEffect spriteEffect=null)
         {
-            _textureName = textureName;
+            _texture = texture;
             _spriteEffect = spriteEffect;
             _animationDict = new Dictionary<string, Animation>();
         }
 
-        public void Load(ContentManager contentManager)
+        public void Add(string name, int horizontalFrameCount, int verticalFrameCount, int row, float frameDuration)
         {
-            _texture = contentManager.Load<Texture2D>(_textureName);
-        }
-
-        public void Add(string name, Animation animation)
-        {
+            Animation animation = new Animation(_texture, horizontalFrameCount, verticalFrameCount, row, frameDuration, _spriteEffect);
             _animationDict.Add(name, animation);
             _currentAnimation = _animationDict[name];
         }

@@ -1,5 +1,4 @@
 ﻿using EtherEngine.Collision.Models;
-using EtherEngine.Entity;
 using EtherEngine.Shapes;
 using Microsoft.Xna.Framework;
 using System;
@@ -23,7 +22,7 @@ namespace EtherEngine.Collision
         public event EventHandler<CollisionEventArgs> CollisionOccured;
         public CollisionTypes Type { get; }
         public CollisionLayer Layer { get; set; }
-        public IEntity ParentEntity { get; set; }
+        public EtherEntity ParentEntity { get; set; }
         public bool Enable { get; set; }
         bool CheckCollision(ICollision other, out Contact contact);
     }

@@ -39,7 +39,6 @@ namespace EtherEngine.Shapes
         {
             Vector2[] verticesArray = new Vector2[vertices.Count];
             Setup(in verticesArray, preComputeNormals);
-
         }
 
         public Vector2[] GetEdges() 

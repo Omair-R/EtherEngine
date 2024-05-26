@@ -20,6 +20,7 @@ namespace CoolMono.Tween
         public readonly TweenType _type;
 
         protected TweenFunc _tweenFunc;
+
         protected T _changeValue;
 
         protected Counter _counter;

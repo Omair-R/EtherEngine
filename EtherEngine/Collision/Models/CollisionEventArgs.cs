@@ -1,5 +1,4 @@
-﻿using EtherEngine.Entity;
-using System;
+﻿using System;
 
 namespace EtherEngine.Collision.Models
 {
@@ -7,8 +6,8 @@ namespace EtherEngine.Collision.Models
     {
         public CollisionLayer layer;
         public Contact contact;
-        public IEntity partentEntity;
-        public IEntity collidingEntity;
+        public EtherEntity partentEntity;
+        public EtherEntity collidingEntity;
     }
 
 }

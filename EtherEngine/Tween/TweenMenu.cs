@@ -28,7 +28,7 @@ namespace CoolMono.Tween
                 case TweenType.EaseInOutQuad: return EaseInOutQuad;
             }
 
-            throw new NotImplementedException();
+            throw new ArgumentException();
         }
 
 
@@ -55,7 +55,7 @@ namespace CoolMono.Tween
         {
             t /= duration/2;
             
-            if (t < 1)//??
+            if (t < 1)
                 return t * t /2;
 
             t -= 2;

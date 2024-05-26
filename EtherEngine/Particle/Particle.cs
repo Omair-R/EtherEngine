@@ -37,7 +37,6 @@ namespace EtherEngine.Particle
         public float LifeTime{get => _lifeTime; set { 
                 _lifeTime = value;
                 RemainingTime = _lifeTime;
-                Reset();
             } 
         }
 
@@ -45,15 +44,11 @@ namespace EtherEngine.Particle
         public bool Active { get; set; }
         public Guid RandomIdentifier { get; private set; }
 
-        public float Accumulated_time { get; private set; } = 0;
-
         public Particle(ParticlePool pool)
         {
             RandomIdentifier = Guid.NewGuid();
             _pool = pool;
         }
-
-        public void Reset() => Accumulated_time = 0;
 
         public void Update(GameTime gameTime)
         {
@@ -71,7 +66,7 @@ namespace EtherEngine.Particle
             RemainingTime -= dt;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(in SpriteBatch spriteBatch)
         {
             Sprite.Center = Position;
             Sprite.Color = Color;

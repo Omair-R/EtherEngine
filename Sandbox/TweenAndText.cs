@@ -57,7 +57,7 @@ namespace Sandbox
             var rot = new RotatableQuad(300, 120, 100, 100, 0);
             if (tweenF.IsFinished || !tweenF.IsStarted)
                 tweenF.Start(0, MathF.PI, 5);
-            rot.Rotation = tweenF.Update();
+            rot.Rotation = tweenF.Update(gameTime);
             shapePool[2] = rot;
 
             if (tweenF.IsFinished)
@@ -67,7 +67,7 @@ namespace Sandbox
         public void Draw(SpriteBatch spriteBatch, ShapeBatch _shapeBatch)
         {
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            writer.Write("Hello", new Vector2(300, 100), Color.Black, spriteBatch);
+            //writer.Write("Hello", new Vector2(300, 100), Color.Black, spriteBatch);
             text.Draw(spriteBatch);
             spriteBatch.End();
 

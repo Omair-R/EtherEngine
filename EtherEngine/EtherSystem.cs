@@ -1,5 +1,5 @@
 ﻿using Arch.Core;
-using EtherEngine.DrawBatch;
+using EtherEngine.Core.DrawBatch;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -9,24 +9,45 @@ namespace EtherEngine
 {
     public abstract class EtherSystem
     {
-        protected readonly World _world;
-        protected EtherSystem(World world)
+        protected readonly EtherScene _scene;
+        protected EtherSystem(EtherScene scene)
         {
-            _world = world;
+            _scene = scene;
         }
     }
 
-    public abstract class UpdatableSystem : EtherSystem
+    public interface IUpdateableSystem
     {
-        protected UpdatableSystem(World world) : base(world) { }
-
-        public abstract void Update(GameTime gameTime);
+        void Update(in GameTime gameTime);
     }
 
-    public abstract class DrawableSystem : EtherSystem
+    public interface IDrawableSystem
     {
-        protected DrawableSystem(World world) : base(world) { }
+        void Draw(SpriteBatch spriteBatch, ShapeBatch shapeBatch);
+    }
+
+    public abstract class UpdatableSystem : EtherSystem, IUpdateableSystem
+    {
+        protected UpdatableSystem(EtherScene scene) : base(scene) { }
+
+        public abstract void Update(in GameTime gameTime);
+    }
+
+    public abstract class DrawableSystem : EtherSystem, IDrawableSystem
+    {
+        protected DrawableSystem(EtherScene scene) : base(scene) { }
 
         public abstract void Draw(SpriteBatch spriteBatch, ShapeBatch shapeBatch);
+    }
+
+    public abstract class UpdateableAndDrawableSystem : EtherSystem, IDrawableSystem, IUpdateableSystem
+    {
+        protected UpdateableAndDrawableSystem(EtherScene scene) : base(scene)
+        {
+        }
+
+        public abstract void Draw(SpriteBatch spriteBatch, ShapeBatch shapeBatch);
+
+        public abstract void Update(in GameTime gameTime);
     }
 }

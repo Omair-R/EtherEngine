@@ -1,5 +1,6 @@
 ﻿using Arch.Core;
-using EtherEngine.DrawBatch;
+using EtherEngine.Core.DrawBatch;
+using EtherEngine.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,14 +12,14 @@ namespace EtherEngine
     public abstract class EtherScene
     {
         internal readonly World _world;
-        internal readonly EntityManager _entityManager;
 
         public readonly SpriteBatch _spriteBatch;
         public readonly ShapeBatch _shapeBatch;
         public readonly GraphicsDeviceManager _graphicsDeviceManager;
         public readonly ContentManager _contentManager;
 
-        private readonly SystemManager _systemManager;
+        public readonly EntityManager _entityManager;
+        protected readonly SystemManager _systemManager;
 
         public bool IsPaused { get; private set; }
 
@@ -26,7 +27,7 @@ namespace EtherEngine
                              ContentManager contentManager,
                              GraphicsDeviceManager graphicsDeviceManager)
         { 
-            _world = World.Create();
+            _world = World.Create(); //TODO: move this to manager
             _entityManager = new EntityManager(this);
             _graphicsDeviceManager = graphicsDeviceManager;
             _spriteBatch = new SpriteBatch(graphicsDevice);

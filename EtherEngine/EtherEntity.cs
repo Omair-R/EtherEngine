@@ -3,6 +3,7 @@ using Arch.Core.Extensions;
 using EtherEngine.Components;
 using EtherEngine.Utils;
 using System;
+using System.Reflection.Metadata;
 
 namespace EtherEngine
 {
@@ -13,12 +14,21 @@ namespace EtherEngine
         public event EventHandler<object> ComponentAdded;
         public bool IsAlive { get; private set; }
 
-        internal EtherEntity(Entity entity, Guid? id=null, string tag = null)
+        public static EtherEntity Wrap(Entity entityHandle) => new EtherEntity(entityHandle);
+
+        private EtherEntity(Entity entityHandle)
+        {
+            _entityHandle = entityHandle;
+            if (!entityHandle.Has<IdComponent>()) AddComponent(new IdComponent());
+            if (!entityHandle.Has<TagComponent>()) AddComponent(new TagComponent());
+        }
+
+        internal EtherEntity(Entity entity, Guid? id = null, string tag = null)
         {
             _entityHandle = entity;
             IsAlive = true;
-            AddComponent(new IdComponent(id ?? (Guid)id));
-            AddComponent(new TagComponent(tag ?? tag));
+            AddComponent(id == null ? new IdComponent() : new IdComponent((Guid)id));
+            AddComponent(tag == null ? new TagComponent() : new TagComponent(tag));
         }
 
         public static implicit operator Entity(EtherEntity e) => e._entityHandle;
@@ -28,19 +38,26 @@ namespace EtherEngine
 
         internal Entity GetHandle() => _entityHandle;
 
-        public void AddComponent<T>(T component){
-            _entityHandle.Add<T>(component);
+        public void AddComponent<T>(T component)
+        {
+            _entityHandle.Add(component);
             EventUtils.Invoke(ComponentAdded, this, component);
         }
 
-        public void ReplaceComponent<T>(T component) { 
-            _entityHandle.Set<T>(component);
-            EventUtils.Invoke(ComponentAdded, this, component);
+        public void ReplaceComponent<T>(T component)
+        {
+            if (!_entityHandle.Has<T>())
+                _entityHandle.Add(component);
+            else
+            {
+                _entityHandle.Set(component);
+                EventUtils.Invoke(ComponentAdded, this, component);
+            }
         }
 
         public void RemoveComponent<T>() => _entityHandle.Remove<T>();
 
-        public T GetComponent<T>() =>_entityHandle.Get<T>();
+        public ref T GetComponent<T>() => ref _entityHandle.Get<T>();
 
         public bool HasComponent<T>() => _entityHandle.Has<T>();
 

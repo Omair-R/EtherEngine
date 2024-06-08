@@ -1,18 +1,22 @@
 ﻿using Microsoft.Xna.Framework;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace EtherEngine.Components
 {
     public struct TransformComponent
     {
-        Vector2 Position;
-        Vector2 Scale;
-        float Rotation;
+        public Vector2 Position;
+        public Vector2 Scale;
+        public float Rotation;
+    }
 
-        public Matrix GetTransform()
+    public static class TransformHelper
+    {
+        public static Matrix GetTransform(ref TransformComponent transform)
         {
-            return Matrix.CreateTranslation(new Vector3(Position.X, Position.Y, 0)) *
-                Matrix.CreateRotationZ(Rotation) *
-                Matrix.CreateScale(new Vector3(Scale.X, Scale.Y, 1));
+            return Matrix.CreateTranslation(new Vector3(transform.Position.X, transform.Position.Y, 0)) *
+                    Matrix.CreateRotationZ(transform.Rotation) *
+                    Matrix.CreateScale(new Vector3(transform.Scale.X, transform.Scale.Y, 1));
         }
     }
 }

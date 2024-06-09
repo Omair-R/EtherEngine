@@ -1,4 +1,6 @@
 ﻿using EtherEngine;
+using EtherGUI;
+using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -11,6 +13,9 @@ namespace Sandbox
         private EtherScene _scene;
         private SpriteBatch _spriteBatch;
         //private ITestScene _scene;
+
+        private EtherGui _etherGui;
+        private GuiBatch _guiBatch;
 
         public Game1()
         {
@@ -27,6 +32,10 @@ namespace Sandbox
             //_scene = new CollisionAndShape();
             //_scene = new TweenAndText();
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            _etherGui = new EtherGui(GraphicsDevice, Window);
+            _guiBatch = new GuiBatch(_etherGui);
+
             //_scene.Initialize(GraphicsDevice);
             base.Initialize();
         }
@@ -52,8 +61,37 @@ namespace Sandbox
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            _guiBatch.Begin(gameTime);
+
+            // Draw our UI
+            ImGuiLayout();
+
+            // Call AfterLayout now to finish up and draw all the things
+            _guiBatch.End();
+
+
             _scene.Draw();
             base.Draw(gameTime);
+        }
+
+        protected virtual void ImGuiLayout()
+        {
+            ImGuiStylePtr style = ImGui.GetStyle();
+
+            style.Alpha = 1.0f;
+
+            _etherGui.FontStore.UseFont("archivo");
+
+            ImGui.Begin("AnotherWindow", ImGuiWindowFlags.NoSavedSettings);
+            ImGui.Text("Hello");
+            ImGui.Text(string.Format("Application average {0:F3} ms/frame ({1:F1} FPS)", 1000f / ImGui.GetIO().Framerate, ImGui.GetIO().Framerate));
+            ImGui.End();
+
+            //bool show_test_window = true;
+            //ImGui.SetNextWindowPos(new ImVec2(650, 20), ImGuiCond.FirstUseEver);
+            //ImGui.ShowDemoWindow(ref show_test_window);
+
+            _etherGui.FontStore.PopFont();
         }
     }
 }

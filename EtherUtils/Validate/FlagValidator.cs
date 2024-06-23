@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EtherEngine.Utils.Validate
+namespace EtherUtils.Validate
 {
     public class FlagValidator
     {
@@ -12,7 +12,8 @@ namespace EtherEngine.Utils.Validate
         private bool _flag = false;
         private readonly bool _defaultDown = false;
 
-        public FlagValidator(Exception exception, bool defaultDown = false) {
+        public FlagValidator(Exception exception, bool defaultDown = false)
+        {
             _exception = exception ?? new Exception();
             _flag = defaultDown;
             _defaultDown = defaultDown;
@@ -28,7 +29,7 @@ namespace EtherEngine.Utils.Validate
         public void Up() => _flag = !_defaultDown;
         public void Down() => _flag = _defaultDown;
         public void Toggle() => _flag = !_flag;
-        public void Throw() =>  throw _exception;
+        public void Throw() => throw _exception;
         public bool GetState() => _flag;
 
         public void Check()

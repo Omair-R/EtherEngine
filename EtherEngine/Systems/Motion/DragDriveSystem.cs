@@ -8,7 +8,7 @@ namespace EtherEngine.Systems.Motion
 {
     public class DragDriveSystem : UpdatableSystem
     {
-        QueryDescription queryDescription = new QueryDescription().WithAll<MotionComponent, InputComponent, DragDriveComponent>();
+        QueryDescription queryDescription = new QueryDescription().WithAll<MotionComponent, MotionDirectionComponent, DragDriveComponent>();
 
         public DragDriveSystem(EtherScene scene) : base(scene)
         {
@@ -19,7 +19,7 @@ namespace EtherEngine.Systems.Motion
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
 
-            _scene._world.Query(in queryDescription, (ref MotionComponent motion, ref InputComponent input, ref DragDriveComponent dragDrive) =>
+            _scene._world.Query(in queryDescription, (ref MotionComponent motion, ref MotionDirectionComponent input, ref DragDriveComponent dragDrive) =>
             {
                 IDrag drag = dragDrive.DragType switch
                 {

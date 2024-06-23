@@ -1,4 +1,6 @@
 ﻿using Arch.Core;
+using Arch.Core.Extensions;
+using EtherEngine.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +23,7 @@ namespace EtherEngine.Managers
         public EtherEntity MakeEntity(Guid? id = null, string tag = null) //TODO: Add Tag
         {
             Entity entity = _scene._world.Create();
-            EtherEntity etherEntity = new EtherEntity(entity, id, tag);
+            EtherEntity etherEntity = new EtherEntity(_scene, entity, id, tag);
 
             _entityMap.Add(etherEntity.GetUid(), etherEntity);
 
@@ -39,19 +41,26 @@ namespace EtherEngine.Managers
             return _entityMap[guid];
         }
 
+        public bool HasEntity(Guid guid)
+        {
+            return _entityMap.ContainsKey(guid);
+        }
+
         public EtherEntity[] GetAllEntities()
         {
-            Span<Entity> span = new Span<Entity>();
-            _scene._world.GetEntities(new QueryDescription(), span);
+            //Span<Entity> span = new Span<Entity>();
+            //_scene._world.GetEntities(new QueryDescription(), span);
 
-            EtherEntity[] entities = new EtherEntity[span.Length];
+            //EtherEntity[] entities = new EtherEntity[span.Length];
 
-            for (int i = 0; i < span.Length; i++)
-            {
-                entities[i] = new EtherEntity(span[i]);
-            }
+            //for (int i = 0; i < span.Length; i++)
+            //{
+            //    entities[i] = new EtherEntity(_scene, span[i]);
+            //}
 
-            return entities;
+            //return entities;
+
+            return _entityMap.Values.ToArray();
         }
 
 

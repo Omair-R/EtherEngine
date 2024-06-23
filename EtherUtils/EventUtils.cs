@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EtherEngine.Utils
+namespace EtherUtils
 {
     public static class EventUtils
     {

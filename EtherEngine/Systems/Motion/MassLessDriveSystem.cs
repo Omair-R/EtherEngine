@@ -13,7 +13,7 @@ namespace EtherEngine.Systems.Motion
     public class MassLessDriveSystem : UpdatableSystem
     {
         QueryDescription queryDescription = new QueryDescription().WithAll<MotionComponent,
-                                                                            InputComponent,
+                                                                            MotionDirectionComponent,
                                                                             MasslessDriveComponent>();
         public MassLessDriveSystem(EtherScene scene) : base(scene)
         {
@@ -23,7 +23,7 @@ namespace EtherEngine.Systems.Motion
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _scene._world.Query(in queryDescription, (ref MotionComponent motion,
-                                                      ref InputComponent input,
+                                                      ref MotionDirectionComponent input,
                                                       ref MasslessDriveComponent masslessDrive) =>
             {
                 motion.Velocity += input.InputDirection * masslessDrive.Acceleration * dt - masslessDrive.FrictionCoff * motion.Velocity;

@@ -12,6 +12,7 @@ using EtherEngine.Systems.Collision;
 using EtherEngine.Core.Shapes;
 using EtherEngine.Systems.Motion;
 using EtherEngine.Components.Graphics;
+using EtherEngine.Entities;
 
 namespace Sandbox
 {
@@ -24,6 +25,7 @@ namespace Sandbox
                          ContentManager contentManager,
                          GraphicsDeviceManager graphicsDeviceManager) : base(graphicsDevice, contentManager, graphicsDeviceManager)
         {
+            _systemManager.AddSystem(new FollowSystem(this));
             _systemManager.AddSystem(new AnimationSystem(this));
             _systemManager.AddSystem(new SpriteSystem(this));
             _systemManager.AddSystem(new InputSystem(this));
@@ -33,7 +35,7 @@ namespace Sandbox
             _systemManager.AddSystem(new GravitySystem(this));
             _systemManager.AddSystem(new CollisionSystem(this));
 
-            EtherEntity spriteEntity = _entityManager.MakeEntity();
+            EtherEntity spriteEntity = entityManager.MakeEntity();
             _ = new Texture2D(graphicsDevice, 100, 100);
 
             Texture2D playerTexture = contentManager.Load<Texture2D>("fall");
@@ -54,7 +56,7 @@ namespace Sandbox
             spriteEntity.AddComponent(new DragDriveComponent { MaxVelocity = 200, 
                                                                 DragType = DragTypes.StokesDrag, 
                                                                 ReachTime = 1 });
-            spriteEntity.AddComponent(new InputComponent { InputDirection = Vector2.Zero });
+            spriteEntity.AddComponent(new MotionDirectionComponent { InputDirection = Vector2.Zero });
 
             //spriteEntity.AddComponent(new GravityComponent { Acceleration = Vector2.One * 980 });
 
@@ -68,7 +70,7 @@ namespace Sandbox
             spriteEntity.AddComponent(new ColliderShapeComponent { Shape = new Circle(spriteEntity.GetComponent<TransformComponent>().Position, 70) });
 
 
-            EtherEntity obsticle = _entityManager.MakeEntity();
+            EtherEntity obsticle = entityManager.MakeEntity();
             obsticle.AddComponent(new SpriteComponent(playerTexture));
             obsticle.AddComponent(new TransformComponent { Position = new Vector2(300, 250), Scale = new Vector2(200, 200), Rotation = 0f });
             obsticle.AddComponent(new ColorComponent { Color = Color.Green });
@@ -79,6 +81,12 @@ namespace Sandbox
                 Layer = objectLayer
             });
             obsticle.AddComponent(new ColliderShapeComponent { Shape = new Circle(obsticle.GetComponent<TransformComponent>().Position, 60) });
+
+
+            var camera = CameraEntity.Create(this);
+            camera.Follow(spriteEntity, new PIDDriveComponent(150, 1, 5, 10, 1));
+            //camera.Follow(spriteEntity);
+            MainCamera = camera;
         }
 
 

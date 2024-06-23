@@ -1,39 +1,33 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EtherEngine.Utils
+namespace EtherUtils.Model
 {
-    public class Counter
+    public class Timer
     {
         float _duration;
         float _remainingTime;
+        bool _repeat;
 
-        public bool IsStarted { get; private set; }
         public bool IsFinished { get; private set; }
         public bool IsActive { get; private set; }
 
-        public event EventHandler<EventArgs> Finished;
+        public event EventHandler<EventArgs> JustFinished;
 
-        public Counter(float duration)
+        public Timer(float duration, bool repeat=false)
         {
             _duration = duration;
             _remainingTime = duration;
+            _repeat = repeat;
 
-            IsStarted = false;
             IsFinished = false;
-            IsActive = false;
+            IsActive = true;
+            
         }
-        public void Start() => Reset();
-
-        public void Reset()
+        public void Restart()
         {
             _remainingTime = _duration;
-            IsStarted = true;
             IsActive = true;
             IsFinished = false;
         }
@@ -46,18 +40,23 @@ namespace EtherEngine.Utils
 
         public void Update(GameTime gameTime)
         {
-            Debug.Assert(IsStarted);
-
-            if (!IsActive) return;
-
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Update(dt);
+        }
+
+        public void Update(float dt)
+        {
+            if (IsFinished && _repeat) Restart();
+
+            if (!IsActive || IsFinished) return;
+
             _remainingTime -= dt;
 
             if (_remainingTime <= 0)
             {
                 IsFinished = true;
                 IsActive = false;
-                EventUtils.Invoke(Finished, this, new EventArgs());
+                EventUtils.Invoke(JustFinished, this, new EventArgs());
             }
         }
     }

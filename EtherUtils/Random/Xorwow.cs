@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EtherEngine.Utils.Random
+namespace EtherUtils.Random
 {
     public class Xorwow : AbstractRandom
     {
@@ -23,13 +23,13 @@ namespace EtherEngine.Utils.Random
         }
         public override uint NextUInt()
         {
-            uint t = (_x ^ (_x >> 2));
+            uint t = _x ^ _x >> 2;
 
             _x = _y;
             _y = _z;
             _z = _w;
             _w = _v;
-            _v = (_v ^ (_v << 4)) ^ (t ^ (t << 1));
+            _v = _v ^ _v << 4 ^ t ^ t << 1;
 
             counter += 362437;
             return _v + counter;

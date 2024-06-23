@@ -2,10 +2,9 @@
 using EtherEngine.Components;
 using EtherEngine.Core.Collision.Models;
 using EtherEngine.Core.Shapes;
-using EtherEngine.Utils;
+using EtherUtils;
 using Microsoft.Xna.Framework;
 using System;
-using System.Diagnostics;
 
 namespace EtherEngine.Systems.Collision
 {
@@ -66,8 +65,8 @@ namespace EtherEngine.Systems.Collision
                     {
                         OnCollisionOccured(new CollisionEventArgs()
                         {
-                            collidingEntity = EtherEntity.Wrap(otherEnitity),
-                            partentEntity = EtherEntity.Wrap(currentEntity),
+                            collidingEntity = EtherEntity.Wrap(_scene, otherEnitity),
+                            partentEntity = EtherEntity.Wrap(_scene, currentEntity),
                             contact = contact,
                             layer = currentCollider.Layer,
                         });

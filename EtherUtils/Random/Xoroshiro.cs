@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EtherEngine.Utils.Random
+namespace EtherUtils.Random
 {
     #region XoroshiroLong
     public abstract class XoroshiroLong : AbstractRandom
@@ -33,7 +33,7 @@ namespace EtherEngine.Utils.Random
             ulong result = tx + ty;
 
             ty ^= tx;
-            _x = RandomUtils._Rotl64(tx, 24) ^ ty ^ (ty << 16);
+            _x = RandomUtils._Rotl64(tx, 24) ^ ty ^ ty << 16;
             _y = RandomUtils._Rotl64(ty, 37);
 
             return result;
@@ -54,7 +54,7 @@ namespace EtherEngine.Utils.Random
             ulong result = RandomUtils._Rotl64(tx + ty, 17) + tx;
 
             ty ^= tx;
-            _x = RandomUtils._Rotl64(tx, 49) ^ ty ^ (ty << 21);
+            _x = RandomUtils._Rotl64(tx, 49) ^ ty ^ ty << 21;
             _y = RandomUtils._Rotl64(ty, 28);
 
             return result;
@@ -72,10 +72,10 @@ namespace EtherEngine.Utils.Random
             ulong tx = _x;
             ulong ty = _y;
 
-            ulong result = RandomUtils._Rotl64(tx * 5, 7) *9;
+            ulong result = RandomUtils._Rotl64(tx * 5, 7) * 9;
 
             ty ^= tx;
-            _x = RandomUtils._Rotl64(tx, 24) ^ ty ^ (ty << 16);
+            _x = RandomUtils._Rotl64(tx, 24) ^ ty ^ ty << 16;
             _y = RandomUtils._Rotl64(ty, 37);
 
             return result;
@@ -110,7 +110,7 @@ namespace EtherEngine.Utils.Random
             uint result = tx * 0x9E3779BB;
 
             ty ^= tx;
-            _x = RandomUtils._Rotl32(tx, 26) ^ ty ^ (ty << 9);
+            _x = RandomUtils._Rotl32(tx, 26) ^ ty ^ ty << 9;
             _y = RandomUtils._Rotl32(ty, 12);
 
             return result;
@@ -128,11 +128,11 @@ namespace EtherEngine.Utils.Random
             uint result = RandomUtils._Rotl32(tx * 0x9E3779BB, 5) * 5;
 
             ty ^= tx;
-            _x = RandomUtils._Rotl32(tx, 26) ^ ty ^ (ty << 9);
+            _x = RandomUtils._Rotl32(tx, 26) ^ ty ^ ty << 9;
             _y = RandomUtils._Rotl32(ty, 12);
 
             return result;
         }
-    } 
+    }
     #endregion
 }

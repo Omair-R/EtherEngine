@@ -1,4 +1,4 @@
-﻿using EtherEngine.Utils.Random;
+﻿using EtherUtils.Random;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

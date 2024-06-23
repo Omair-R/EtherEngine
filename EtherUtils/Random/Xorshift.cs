@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EtherEngine.Utils.Random
+namespace EtherUtils.Random
 {
     public class Xorshift128Plus : AbstractRandom
     {
@@ -30,11 +30,11 @@ namespace EtherEngine.Utils.Random
 
             tx ^= tx << 23;
             tx ^= tx >> 18;
-            tx ^= ty ^ (ty >> 5);
+            tx ^= ty ^ ty >> 5;
 
             _y = tx;
 
-            return tx+ty;
+            return tx + ty;
         }
 
     }

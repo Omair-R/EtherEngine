@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EtherUtils;
 
-namespace EtherEngine.Utils.Validate
+namespace EtherUtils.Validate
 {
     public class FlagEventArgs : EventArgs
     {
         public bool State { get; set; }
-        public FlagEventArgs(bool state) {
+        public FlagEventArgs(bool state)
+        {
             State = state;
         }
     }
@@ -20,22 +22,26 @@ namespace EtherEngine.Utils.Validate
 
         public event EventHandler<FlagEventArgs> FlagChanged;
 
-        public Flag(bool initialState = false) {
+        public Flag(bool initialState = false)
+        {
             _flag = initialState;
         }
 
         public bool GetState() => _flag;
-        public void Up() {
-            if(!_flag) EventUtils.Invoke< FlagEventArgs>(FlagChanged, this, new FlagEventArgs(true));
+        public void Up()
+        {
+            if (!_flag) EventUtils.Invoke(FlagChanged, this, new FlagEventArgs(true));
             _flag = true;
         }
-        public void Down() {
-            if (_flag) EventUtils.Invoke<FlagEventArgs>(FlagChanged, this, new FlagEventArgs(false));
-            _flag = false; 
+        public void Down()
+        {
+            if (_flag) EventUtils.Invoke(FlagChanged, this, new FlagEventArgs(false));
+            _flag = false;
         }
-        public void Toggle() {
+        public void Toggle()
+        {
             _flag = !_flag;
-            EventUtils.Invoke<FlagEventArgs>(FlagChanged, this, new FlagEventArgs(_flag));
+            EventUtils.Invoke(FlagChanged, this, new FlagEventArgs(_flag));
         }
     }
 }

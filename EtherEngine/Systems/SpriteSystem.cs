@@ -25,7 +25,10 @@ namespace EtherEngine.Systems
         {
             var query = _scene._world.Query(in queryDescription);
 
-            spriteBatch.Begin();
+            if (_scene.MainCamera != null)
+                spriteBatch.Begin(transformMatrix: _scene.MainCamera.GetTransform());
+            else 
+                spriteBatch.Begin();
 
             foreach (ref var chunk in query)
             {

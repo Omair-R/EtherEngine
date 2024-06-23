@@ -11,7 +11,7 @@ namespace EtherEngine.Systems.Motion
 {
     public class PIDDriveSystem : UpdatableSystem
     {
-        QueryDescription queryDescription = new QueryDescription().WithAll<MotionComponent, PIDDriveComponent>();
+        QueryDescription queryDescription = new QueryDescription().WithAll<MotionComponent, MotionDirectionComponent, PIDDriveComponent>();
         public PIDDriveSystem(EtherScene scene) : base(scene)
         {
         }
@@ -20,7 +20,7 @@ namespace EtherEngine.Systems.Motion
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _scene._world.Query(in queryDescription, (ref MotionComponent motion,
-                                                      ref InputComponent input,
+                                                      ref MotionDirectionComponent input,
                                                       ref PIDDriveComponent pid) =>
             {
                 Vector2 force = Vector2.Zero;

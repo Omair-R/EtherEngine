@@ -1,12 +1,12 @@
 ﻿using System;
 
 
-namespace EtherEngine.Utils.Pattern
+namespace EtherUtils.Pattern
 {
     public abstract class LazySingleton<T> where T : LazySingleton<T>
     {
         protected static readonly Lazy<T> _lazyInstance = new Lazy<T>(
-            ()=> (Activator.CreateInstance(typeof(T), true) as T)!);
+            () => (Activator.CreateInstance(typeof(T), true) as T)!);
         public static T Instance
         {
             get { return _lazyInstance.Value; }

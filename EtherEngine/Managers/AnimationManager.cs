@@ -1,6 +1,7 @@
 ﻿using EtherEngine.Components;
 using EtherEngine.Components.Graphics;
-using EtherEngine.Utils.Pattern;
+using EtherUtils;
+using EtherUtils.Pattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +52,7 @@ namespace EtherEngine.Managers
                 CurrentAnimation = AnimtionName;
                 _parentEntity.ReplaceComponent(_animations[CurrentAnimation]);
                 _parentEntity.ReplaceComponent(_sprites[CurrentAnimation]);
-                Utils.EventUtils.Invoke(CurrentAnimationChanged, this, new EventArgs());
+                EventUtils.Invoke(CurrentAnimationChanged, this, new EventArgs());
             }
         }
 

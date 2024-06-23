@@ -1,29 +1,39 @@
 ﻿using Arch.Core;
 using Arch.Core.Extensions;
 using EtherEngine.Components;
-using EtherEngine.Utils;
+using EtherUtils;
 using System;
 using System.Reflection.Metadata;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace EtherEngine
 {
     public class EtherEntity //TODO: make disposable
     {
+        protected readonly EtherScene _scene;
         private readonly Entity _entityHandle;
-
         public event EventHandler<object> ComponentAdded;
+
         public bool IsAlive { get; private set; }
 
-        public static EtherEntity Wrap(Entity entityHandle) => new EtherEntity(entityHandle);
+        public static EtherEntity Wrap(EtherScene scene, Entity entityHandle) {
+            ref var id = ref entityHandle.Get<IdComponent>();
 
-        private EtherEntity(Entity entityHandle)
+            if (scene.entityManager.HasEntity(id.Id))
+                return scene.entityManager.GetEntity(id.Id);
+
+            else throw new Exception("Entity does not exist, please create entities through the entity manager.");
+        }
+
+        private EtherEntity(EtherScene scene, Entity entityHandle)
         {
             _entityHandle = entityHandle;
+            _scene = scene;
             if (!entityHandle.Has<IdComponent>()) AddComponent(new IdComponent());
             if (!entityHandle.Has<TagComponent>()) AddComponent(new TagComponent());
         }
 
-        internal EtherEntity(Entity entity, Guid? id = null, string tag = null)
+        internal EtherEntity(EtherScene scene, Entity entity, Guid? id = null, string tag = null)
         {
             _entityHandle = entity;
             IsAlive = true;

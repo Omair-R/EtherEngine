@@ -1,5 +1,5 @@
 ﻿using EtherEngine.Core.Shapes;
-using EtherEngine.Utils.Validate;
+using EtherUtils.Validate;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;

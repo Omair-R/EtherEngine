@@ -1,4 +1,5 @@
-﻿using EtherEngine.Utils;
+﻿using EtherUtils;
+using EtherUtils.Model;
 using Microsoft.Xna.Framework;
 using System;
 

@@ -1,5 +1,4 @@
-﻿
-namespace EtherEngine.Utils
+﻿namespace EtherUtils.Model
 {
     public class MinMax
     {

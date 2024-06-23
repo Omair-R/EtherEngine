@@ -1,6 +1,6 @@
 ﻿using EtherEngine.Core.Collision.Models;
 using EtherEngine.Core.Shapes;
-using EtherEngine.Utils;
+using EtherUtils;
 using Microsoft.Xna.Framework;
 using System;
 

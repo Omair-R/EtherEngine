@@ -1,5 +1,5 @@
-﻿using EtherEngine.Utils;
-using EtherEngine.Utils.Random;
+﻿using EtherUtils;
+using EtherUtils.Random;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

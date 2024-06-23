@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace EtherEngine.Utils.Random
+namespace EtherUtils.Random
 {
     public interface IRandom
     {
@@ -60,7 +60,7 @@ namespace EtherEngine.Utils.Random
 
         public abstract void ResetInternalState();
 
-        public virtual ulong NextULong() => (((ulong)NextUInt()) << 32) | NextUInt();
+        public virtual ulong NextULong() => (ulong)NextUInt() << 32 | NextUInt();
 
         public virtual uint NextUInt() => (uint)(NextULong() >> 32);
 
@@ -172,7 +172,7 @@ namespace EtherEngine.Utils.Random
         #endregion
 
         #region Decimal
-        public float NextFloat() => (float)NextUInt() / (float)uint.MaxValue;
+        public float NextFloat() => NextUInt() / (float)uint.MaxValue;
 
         public float NextFloat(float maxValue)
         {
@@ -188,7 +188,7 @@ namespace EtherEngine.Utils.Random
             return NextFloat(maxValue - minValue) + minValue;
         }
 
-        public double NextDouble() => (double)NextULong() / (double)ulong.MaxValue;
+        public double NextDouble() => NextULong() / (double)ulong.MaxValue;
 
         public double NextDouble(double maxValue)
         {
@@ -208,9 +208,9 @@ namespace EtherEngine.Utils.Random
 
         public bool NextBool()
         {
-            return (NextULong() % 2) != 0 ;
+            return NextULong() % 2 != 0;
         }
 
-        
+
     }
 }

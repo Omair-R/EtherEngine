@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EtherEngine.Components
 {
-    public struct InputComponent //TODO: Make singlton.
+    public struct MotionDirectionComponent //TODO: Make singlton.
     {
         public Vector2 InputDirection;
     }

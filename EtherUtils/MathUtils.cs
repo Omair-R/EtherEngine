@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 
-namespace EtherEngine.Utils
+namespace EtherUtils
 {
-    static class MathUtils
+    public static class MathUtils
     {
         public static float InverseLerp(float a, float b, float x)
         {
@@ -14,6 +14,12 @@ namespace EtherEngine.Utils
         {
             Vector2 distanceVec = a - b;
             return distanceVec.Length();
+        }
+
+        public static Vector2 Direction(Vector2 a, Vector2 b)
+        {
+            Vector2 distanceVec = a - b;
+            return Normalize(distanceVec);
         }
 
         public static Vector2 Normalize(Vector2 value)
@@ -33,6 +39,6 @@ namespace EtherEngine.Utils
             return new Vector2(MathF.Abs(value.X), MathF.Abs(value.Y));
         }
 
-        
+
     }
 }

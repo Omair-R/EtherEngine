@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EtherEngine.Utils.Pattern
+namespace EtherUtils.Pattern
 {
     public interface IAction
     {
         public void Execute();
     }
 
-    public abstract class  Actor
+    public abstract class Actor
     {
         private IAction action;
 

@@ -1,6 +1,6 @@
-﻿using EtherEngine.Utils.Pattern;
+﻿using EtherUtils.Pattern;
 
-namespace EtherEngine.Utils.Random
+namespace EtherUtils.Random
 {
     public enum RandomMethods
     {
@@ -22,7 +22,8 @@ namespace EtherEngine.Utils.Random
 
         public AbstractRandom Randomizer { get; private set; }
 
-        private RandomSinglton() { 
+        private RandomSinglton()
+        {
             Randomizer = new PCG();
         }
 

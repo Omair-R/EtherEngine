@@ -20,7 +20,7 @@ namespace EtherEngine.Systems
         {
             Query query = _scene._world.Query(in queryDescription);
 
-            _scene._spriteBatch.Begin();
+            _scene.spriteBatch.Begin();
             foreach (ref Chunk chunk in query)
             {
                 chunk.GetSpan<TextSpriteComponent, TransformComponent, ColorComponent>(out var textSprites, out var transforms, out var colors);
@@ -42,7 +42,7 @@ namespace EtherEngine.Systems
 
 
             }
-            _scene._spriteBatch.End();
+            _scene.spriteBatch.End();
         }
     }
 }

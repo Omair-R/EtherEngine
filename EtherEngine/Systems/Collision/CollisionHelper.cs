@@ -1,7 +1,7 @@
 ﻿using EtherEngine.Components;
 using EtherEngine.Core.Collision.Models;
 using EtherEngine.Core.Shapes;
-using EtherEngine.Utils.Pattern;
+using EtherUtils.Pattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;

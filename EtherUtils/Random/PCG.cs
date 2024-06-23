@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EtherEngine.Utils.Random
+namespace EtherUtils.Random
 {
-    
+
     public class PCG : AbstractRandom
     {
         private ulong _x;
 
-        public PCG(ulong? seed = null) :base(seed){}
+        public PCG(ulong? seed = null) : base(seed) { }
 
         public override void ResetInternalState()
         {

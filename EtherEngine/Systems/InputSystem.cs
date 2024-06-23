@@ -9,7 +9,7 @@ namespace EtherEngine.Systems
 {
     public class InputSystem : UpdatableSystem
     {
-        private readonly QueryDescription queryDescription = new QueryDescription().WithAll<InputComponent>();
+        private readonly QueryDescription queryDescription = new QueryDescription().WithAll<MotionDirectionComponent>().WithNone<FollowComponent>();
 
         public InputSystem(EtherScene scene) : base(scene)
         {
@@ -19,7 +19,7 @@ namespace EtherEngine.Systems
         {
             var keyboardManager = KeyboardManager.Instance;
 
-            _scene._world.Query(in queryDescription, (ref InputComponent inputs) =>
+            _scene._world.Query(in queryDescription, (ref MotionDirectionComponent inputs) =>
             {
                 inputs.InputDirection = keyboardManager.HandleMovementInput();
             });

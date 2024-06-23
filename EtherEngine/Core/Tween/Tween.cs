@@ -1,4 +1,5 @@
-﻿using EtherEngine.Utils;
+﻿using EtherUtils;
+using EtherUtils.Model;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace EtherEngine.Core.Tween
 
         protected T _changeValue;
 
-        protected Counter _counter;
+        protected Timer _timer;
         public bool IsStarted { get; protected set; }
         public bool IsFinished { get; protected set; }
 
@@ -47,13 +48,13 @@ namespace EtherEngine.Core.Tween
             IsStarted = true;
             IsFinished = false;
 
-            _counter = new Counter(duration);
+            _timer = new Timer(duration);
         }
 
         protected void PrepareTime(GameTime gameTime, out float t)
         {
-            _counter.Update(gameTime);
-            t = _counter.GetProgress();
+            _timer.Update(gameTime);
+            t = _timer.GetProgress();
 
             if (t > Duration)
             {

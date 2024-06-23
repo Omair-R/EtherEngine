@@ -1,5 +1,6 @@
 ﻿using Arch.Core;
 using EtherEngine.Core.DrawBatch;
+using EtherEngine.Entities;
 using EtherEngine.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -13,13 +14,17 @@ namespace EtherEngine
     {
         internal readonly World _world;
 
-        public readonly SpriteBatch _spriteBatch;
-        public readonly ShapeBatch _shapeBatch;
-        public readonly GraphicsDeviceManager _graphicsDeviceManager;
-        public readonly ContentManager _contentManager;
+        public readonly SpriteBatch spriteBatch;
+        public readonly ShapeBatch shapeBatch;
+        public readonly GraphicsDeviceManager graphicsDeviceManager;
+        public readonly ContentManager contentManager;
 
-        public readonly EntityManager _entityManager;
+        public readonly EntityManager entityManager;
         protected readonly SystemManager _systemManager;
+
+        public readonly GraphicsDevice _graphicsDevice;
+
+        public CameraEntity MainCamera {  get; set; }
 
         public bool IsPaused { get; private set; }
 
@@ -28,11 +33,13 @@ namespace EtherEngine
                              GraphicsDeviceManager graphicsDeviceManager)
         { 
             _world = World.Create(); //TODO: move this to manager
-            _entityManager = new EntityManager(this);
-            _graphicsDeviceManager = graphicsDeviceManager;
-            _spriteBatch = new SpriteBatch(graphicsDevice);
-            _shapeBatch = new ShapeBatch(graphicsDevice);
-            _contentManager = contentManager;
+            entityManager = new EntityManager(this);
+            this.graphicsDeviceManager = graphicsDeviceManager;
+            spriteBatch = new SpriteBatch(graphicsDevice);
+            shapeBatch = new ShapeBatch(graphicsDevice);
+            this.contentManager = contentManager;
+
+            _graphicsDevice = graphicsDevice;
 
             _systemManager = new SystemManager();
         }
@@ -72,7 +79,7 @@ namespace EtherEngine
 
         public virtual void Draw()
         {
-            _systemManager.Draw(_spriteBatch, _shapeBatch);
+            _systemManager.Draw(spriteBatch, shapeBatch);
         }
 
 

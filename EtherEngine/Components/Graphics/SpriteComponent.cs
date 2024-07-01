@@ -10,6 +10,7 @@ namespace EtherEngine.Components.Graphics
         public Rectangle SrcRect = Rectangle.Empty;
         public float LayerDepth = 0f;
         public SpriteEffects Effect = SpriteEffects.None;
+        public float Alpha = 1f;
 
         public SpriteComponent(Texture2D texture)
         {

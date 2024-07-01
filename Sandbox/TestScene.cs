@@ -13,6 +13,7 @@ using EtherEngine.Core.Shapes;
 using EtherEngine.Systems.Motion;
 using EtherEngine.Components.Graphics;
 using EtherEngine.Entities;
+using EtherEngine.Components.Relations;
 
 namespace Sandbox
 {
@@ -83,8 +84,8 @@ namespace Sandbox
             obsticle.AddComponent(new ColliderShapeComponent { Shape = new Circle(obsticle.GetComponent<TransformComponent>().Position, 60) });
 
 
-            var camera = CameraEntity.Create(this);
-            camera.Follow(spriteEntity, new PIDDriveComponent(150, 1, 5, 10, 1));
+            var camera = new CameraEntity(this);
+            camera.Follow(spriteEntity, new PIDDriveComponent(100, 1, 5, 10, 1));
             //camera.Follow(spriteEntity);
             MainCamera = camera;
         }

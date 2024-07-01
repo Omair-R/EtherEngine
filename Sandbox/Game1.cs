@@ -1,9 +1,11 @@
 ﻿using EtherEngine;
+using EtherEngine.LDTK;
 using EtherGUI;
 using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.IO;
 
 namespace Sandbox
 {
@@ -22,7 +24,6 @@ namespace Sandbox
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
         }
 
         protected override void Initialize()
@@ -36,6 +37,7 @@ namespace Sandbox
             _etherGui = new EtherGui(GraphicsDevice, Window);
             _guiBatch = new GuiBatch(_etherGui);
 
+            
             //_scene.Initialize(GraphicsDevice);
             base.Initialize();
         }
@@ -43,6 +45,8 @@ namespace Sandbox
         protected override void LoadContent()
         {
             _scene = new TestScene(GraphicsDevice, Content, _graphics);
+
+            LdtkJson json = Content.Load<LdtkJson>("test");
             // TODO: use this.Content to load your game content here
             //_scene.LoadContent(Content);
         }

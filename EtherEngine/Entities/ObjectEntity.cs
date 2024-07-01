@@ -9,25 +9,20 @@ namespace EtherEngine.Entities
 {
     internal class ObjectEntity : EntityWrapper
     {
-        public static ObjectEntity Create(EtherScene scene, Guid? id = null, string tag = null)
+        public ObjectEntity(EtherScene scene, Guid? id = null, string tag = null) : base(scene.entityManager.MakeEntity(id, tag), scene)
         {
-            var cameraEntity = new ObjectEntity(scene.entityManager.MakeEntity(id, tag), scene);
-            cameraEntity.AddComponent(new TransformComponent());
-
-            return cameraEntity;
+            _entity.AddComponent(new TransformComponent());
         }
 
         public static ObjectEntity Wrap(EtherEntity entity, EtherScene scene)
         {
             if (entity.HasComponent<TransformComponent>())
             {
-                return new ObjectEntity(entity, scene);
+                return new ObjectEntity(scene, entity.GetUid(), entity.GetTag());
             }
 
             throw new Exception("Not a object");
         }
-        internal ObjectEntity(EtherEntity entity, EtherScene scene) : base(entity, scene)
-        {
-        }
+
     }
 }

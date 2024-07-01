@@ -87,7 +87,7 @@ namespace EtherEngine.Core.Collision.Utils
 
         public static Vector2 ClosestVector(Vector2[] vectors, Vector2 target)
         {
-            if (vectors.Length == 0) throw new Exception();
+            if (vectors.Length == 0) throw new ArgumentException("Empty vector array not allowed.");
 
             float distance = float.MaxValue;
             Vector2 closestVector = Vector2.Zero;

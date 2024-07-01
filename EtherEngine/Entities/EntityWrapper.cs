@@ -28,6 +28,8 @@ namespace EtherEngine.Entities
 
         }
 
+        public static implicit operator EtherEntity(EntityWrapper entityWrapper) => entityWrapper._entity;
+
         public Guid GetUid() => _entity.GetUid();
 
         public string GetTag() => _entity.GetTag();
@@ -36,7 +38,7 @@ namespace EtherEngine.Entities
 
         public void AddComponent<T>(T component) => _entity.AddComponent(component);
 
-        public void ReplaceComponent<T>(T component) => _entity.ReplaceComponent(component);
+        public void ReplaceComponent<T>(T component) => _entity.SetComponent(component);
 
         public void RemoveComponent<T>() => _entity.RemoveComponent<T>();
 
@@ -50,12 +52,12 @@ namespace EtherEngine.Entities
         {
             if (obj is EtherEntity entity)
             {
-                return GetUid() == entity.GetUid();
+                return _entity.GetUid() == entity.GetUid();
             }
 
             if (obj is EntityWrapper entityWrapper)
             {
-                return GetUid() == entityWrapper.GetUid();
+                return _entity.GetUid() == entityWrapper._entity.GetUid();
             }
 
             return false;
@@ -64,7 +66,7 @@ namespace EtherEngine.Entities
         public override int GetHashCode()
         {
             HashCode hash = new HashCode();
-            hash.Add(GetUid);
+            hash.Add(_entity.GetUid);
             return hash.ToHashCode();
         }
 

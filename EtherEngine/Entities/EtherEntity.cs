@@ -1,22 +1,26 @@
 ﻿using Arch.Core;
 using Arch.Core.Extensions;
 using EtherEngine.Components;
+using EtherEngine.Components.Relations;
 using EtherUtils;
 using System;
+using System.Collections.Generic;
 using System.Reflection.Metadata;
 using static System.Formats.Asn1.AsnWriter;
 
-namespace EtherEngine
+namespace EtherEngine.Entities
 {
-    public class EtherEntity //TODO: make disposable
+    public partial class EtherEntity //TODO: make disposable
     {
         protected readonly EtherScene _scene;
         private readonly Entity _entityHandle;
         public event EventHandler<object> ComponentAdded;
 
+
         public bool IsAlive { get; private set; }
 
-        public static EtherEntity Wrap(EtherScene scene, Entity entityHandle) {
+        public static EtherEntity Wrap(EtherScene scene, Entity entityHandle)
+        {
             ref var id = ref entityHandle.Get<IdComponent>();
 
             if (scene.entityManager.HasEntity(id.Id))
@@ -50,11 +54,13 @@ namespace EtherEngine
 
         public void AddComponent<T>(T component)
         {
+            if (HasComponent<T>()) return;
+
             _entityHandle.Add(component);
             EventUtils.Invoke(ComponentAdded, this, component);
         }
 
-        public void ReplaceComponent<T>(T component)
+        public void SetComponent<T>(T component)
         {
             if (!_entityHandle.Has<T>())
                 _entityHandle.Add(component);
@@ -72,6 +78,7 @@ namespace EtherEngine
         public bool HasComponent<T>() => _entityHandle.Has<T>();
 
         public object[] GetAllComponenet() => _entityHandle.GetAllComponents();
+
 
         public override bool Equals(object obj)
         {

@@ -1,5 +1,6 @@
 ﻿using EtherEngine.Core.Collision.Models;
 using EtherEngine.Core.Shapes;
+using EtherEngine.Entities;
 using EtherUtils;
 using System;
 

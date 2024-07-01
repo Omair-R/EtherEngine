@@ -1,4 +1,5 @@
 ﻿using EtherEngine.Core.Collision.Models;
+using EtherEngine.Entities;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;

@@ -4,35 +4,29 @@ using EtherEngine.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using static System.Formats.Asn1.AsnWriter;
 
 
 namespace EtherEngine.Entities
 {
     public class CameraEntity : EntityWrapper
     {
-        public static CameraEntity Create(EtherScene scene, Guid? id = null, string tag = null)
+        public CameraEntity(EtherScene scene, Guid? id = null, string tag = null) : base(scene.entityManager.MakeEntity(id, tag), scene)
         {
-            var cameraEntity = new CameraEntity(scene.entityManager.MakeEntity(id, tag), scene);
-            cameraEntity.AddComponent(new CameraComponent());
-            cameraEntity.AddComponent(new TransformComponent());
-
-            return cameraEntity;
+            _entity.AddComponent(new CameraComponent());
+            _entity.AddComponent(new TransformComponent());
         }
 
         public static CameraEntity Wrap(EtherEntity entity, EtherScene scene)
         {
             if (entity.HasComponent<CameraComponent>() && entity.HasComponent<TransformComponent>())
             {
-                return new CameraEntity(entity, scene);
+                return new CameraEntity(scene, entity.GetUid(), entity.GetTag());
             }
 
             throw new Exception("Not a camera");
         }
 
-        internal CameraEntity(EtherEntity entity, EtherScene scene) : base(entity, scene)
-        {
-            
-        }
 
         private Matrix _GetTransform(in TransformComponent cameraTransform, Viewport viewport)
         {
@@ -44,14 +38,14 @@ namespace EtherEngine.Entities
 
         public Matrix GetTransform()
         {
-            ref var transform = ref GetComponent<TransformComponent>();
+            ref var transform = ref _entity.GetComponent<TransformComponent>();
 
             return _GetTransform(transform, _scene._graphicsDevice.Viewport);
         }
 
         public void Follow(EtherEntity entity)
         {
-            AddComponent(new FollowComponent { 
+            _entity.AddComponent(new FollowComponent { 
                 EntityUID = entity.GetUid(), 
                 FollowType = FollowType.Instant,
             });
@@ -59,19 +53,19 @@ namespace EtherEngine.Entities
 
         public void Follow(EtherEntity entity, in PIDDriveComponent pid)
         {
-            AddComponent(new FollowComponent
+            _entity.AddComponent(new FollowComponent
             {
                 EntityUID = entity.GetUid(),
                 FollowType = FollowType.PID,
             });
 
-            AddComponent(pid);
+            _entity.AddComponent(pid);
         }
 
         public void Unfollow()
         {
-            if (HasComponent<FollowComponent>()) RemoveComponent<FollowComponent>();
-            if (HasComponent<PIDDriveComponent>()) RemoveComponent<PIDDriveComponent>();
+            if (_entity.HasComponent<FollowComponent>()) _entity.RemoveComponent<FollowComponent>();
+            if (_entity.HasComponent<PIDDriveComponent>()) _entity.RemoveComponent<PIDDriveComponent>();
         }
 
     }

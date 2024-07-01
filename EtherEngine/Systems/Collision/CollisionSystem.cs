@@ -2,6 +2,7 @@
 using EtherEngine.Components;
 using EtherEngine.Core.Collision.Models;
 using EtherEngine.Core.Shapes;
+using EtherEngine.Entities;
 using EtherUtils;
 using Microsoft.Xna.Framework;
 using System;

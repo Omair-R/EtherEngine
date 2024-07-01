@@ -33,7 +33,7 @@ namespace EtherEngine
                              GraphicsDeviceManager graphicsDeviceManager)
         { 
             _world = World.Create(); //TODO: move this to manager
-            entityManager = new EntityManager(this);
+            entityManager = new EntityManager(this); //TODO: Kill all managers.
             this.graphicsDeviceManager = graphicsDeviceManager;
             spriteBatch = new SpriteBatch(graphicsDevice);
             shapeBatch = new ShapeBatch(graphicsDevice);
@@ -42,6 +42,8 @@ namespace EtherEngine
             _graphicsDevice = graphicsDevice;
 
             _systemManager = new SystemManager();
+
+            EtherWorld world = new EtherWorld();
         }
         protected virtual bool BeginDraw() 
         {

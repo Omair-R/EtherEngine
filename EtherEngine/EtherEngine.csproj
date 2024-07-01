@@ -10,7 +10,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EtherUtils\EtherUtils.csproj" />
+    <ProjectReference Include="..\EtherUtils\EtherEngine.Utils.csproj" />
   </ItemGroup>
 
 </Project>

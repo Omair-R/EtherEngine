@@ -1,4 +1,5 @@
 ﻿using System;
+using EtherEngine.Entities;
 
 namespace EtherEngine.Core.Collision.Models
 {

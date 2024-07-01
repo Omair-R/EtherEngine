@@ -10,6 +10,8 @@
 
 #-------------------------------- References --------------------------------#
 
+/reference:..\..\EtherEngine.LDTK.Content.Pipeline\bin\Debug\net6.0\EtherEngine.LDTK.Content.Pipeline.dll
+/reference:..\..\EtherEngine.LDTK\bin\Debug\net6.0\Newtonsoft.Json.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -50,4 +52,9 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:ourFont.spritefont
+
+#begin test.ldtk
+/importer:LdtkImporter
+/processor:LdtkProcessor
+/build:test.ldtk
 

@@ -1,6 +1,7 @@
 ﻿using Arch.Core;
 using Arch.Core.Extensions;
 using EtherEngine.Components;
+using EtherEngine.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace EtherEngine.Managers
             _entityMap = new Dictionary<Guid, EtherEntity>();
         }
 
-        public EtherEntity MakeEntity(Guid? id = null, string tag = null) //TODO: Add Tag
+        public EtherEntity MakeEntity(Guid? id = null, string tag = null) 
         {
             Entity entity = _scene._world.Create();
             EtherEntity etherEntity = new EtherEntity(_scene, entity, id, tag);

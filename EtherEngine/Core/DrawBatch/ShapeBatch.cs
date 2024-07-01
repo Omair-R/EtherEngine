@@ -49,7 +49,7 @@ namespace EtherEngine.Core.DrawBatch
             {
                 basicEffect = effect as BasicEffect;
 
-                if (basicEffect != null) throw new Exception("only accepts basic effects for now.");
+                if (basicEffect != null) throw new NotSupportedException("only accepts basic effects for now.");
             }
 
             SetEffect(basicEffect);
@@ -131,7 +131,7 @@ namespace EtherEngine.Core.DrawBatch
 
         private void CheckCapacity(int checkVertices)
         {
-            if (checkVertices > _maxVerticesCount) throw new Exception("The number of vertices is higher than the maximum capacity of the vertex buffer."); ;
+            if (checkVertices > _maxVerticesCount) throw new OverflowException("The number of vertices is higher than the maximum capacity of the vertex buffer."); ;
         }
 
         public void DrawShape(IShape shape, Color color) //TODO: Optimize this
@@ -152,7 +152,7 @@ namespace EtherEngine.Core.DrawBatch
             {
                 DrawPolygon(poly, color);
             }
-            else throw new Exception();
+            else throw new NotSupportedException();
 
         }
 

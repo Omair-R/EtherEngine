@@ -1,6 +1,7 @@
 #### Major tasks: 
 - [X] <strike>LDtk support.</strike>
-- [ ] LDtk rendering.
+- [X] <strike>LDtk rendering.</strike>
+- [ ] LDtk collisions.
 - [ ] Support for other primary shapes.
 - [X] <strike>Custom exceptions.</strike>
 - [ ] Texture pool?
@@ -24,9 +25,12 @@
 - [ ] Replace the world with an EtherWorld.
 
 
+
 #### Refactoring: 
 - [ ] Refactor the shape renderer
 - [ ] Scene Refactoring.
+- [ ] Standardize the components
+- [ ] Change all the Getsomething functions to Something.
 
 
 #### Quick Fixes:

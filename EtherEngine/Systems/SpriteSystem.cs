@@ -26,9 +26,9 @@ namespace EtherEngine.Systems
             var query = _scene._world.Query(in queryDescription);
 
             if (_scene.MainCamera != null)
-                spriteBatch.Begin(transformMatrix: _scene.MainCamera.GetTransform());
+                spriteBatch.Begin(transformMatrix: _scene.MainCamera.GetTransform(), samplerState: SamplerState.PointWrap);
             else 
-                spriteBatch.Begin();
+                spriteBatch.Begin(samplerState: SamplerState.PointWrap);
 
             foreach (ref var chunk in query)
             {
@@ -41,14 +41,23 @@ namespace EtherEngine.Systems
                     ref var sprite = ref sprites[index];
                     ref var color = ref colors[index];
 
-                    spriteBatch.Draw(sprite.Texture,
-                                    GetDestinationRectangle(transform),
-                                    sprite.SrcRect,
-                                    color.Color,
-                                    transform.Rotation,
+                    //spriteBatch.Draw(sprite.Texture,
+                    //                GetDestinationRectangle(transform),
+                    //                sprite.SrcRect,
+                    //                color.Color,
+                    //                transform.Rotation,
+                    //                new Vector2(sprite.SrcRect.Width / 2, sprite.SrcRect.Height / 2),
+                    //                sprite.Effect,
+                    //                sprite.LayerDepth);
+
+                    spriteBatch.Draw(sprite.Texture, 
+                                    transform.Position, 
+                                    sprite.SrcRect, color.Color, transform.Rotation,
                                     new Vector2(sprite.SrcRect.Width / 2, sprite.SrcRect.Height / 2),
+                                    transform.Scale,
                                     sprite.Effect,
                                     sprite.LayerDepth);
+
 
                 }
             }

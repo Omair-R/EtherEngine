@@ -31,10 +31,13 @@ namespace Sandbox
             _systemManager.AddSystem(new SpriteSystem(this));
             _systemManager.AddSystem(new InputSystem(this));
             _systemManager.AddSystem(new DragDriveSystem(this));
+            _systemManager.AddSystem(new PIDDriveSystem(this));
             _systemManager.AddSystem(new MotionSystem(this));
 
             _systemManager.AddSystem(new GravitySystem(this));
+            _systemManager.AddSystem(new CollisionGizmoSystem(this));
             _systemManager.AddSystem(new CollisionSystem(this));
+            
 
             EtherEntity spriteEntity = entityManager.MakeEntity();
             _ = new Texture2D(graphicsDevice, 100, 100);
@@ -50,13 +53,14 @@ namespace Sandbox
                                  new SpriteComponent(animatedTexture),
                                  new SpriteAnimationComponent("idle", 11, 1, 0, 0, 0.1f));
 
-            spriteEntity.AddComponent(new TransformComponent { Position = new Vector2(30, 100), Scale = new Vector2(100, 100), Rotation = 0f});
+            spriteEntity.AddComponent(new TransformComponent { Position = new Vector2(30, 100), Scale = new Vector2(1, 1), Rotation = 0f});
             spriteEntity.AddComponent(new ColorComponent { Color = Color.White });
 
             spriteEntity.AddComponent(new MotionComponent { Velocity = Vector2.Zero });
-            spriteEntity.AddComponent(new DragDriveComponent { MaxVelocity = 200, 
-                                                                DragType = DragTypes.StokesDrag, 
-                                                                ReachTime = 1 });
+            //spriteEntity.AddComponent(new DragDriveComponent { MaxVelocity = 64, 
+            //                                                    DragType = DragTypes.StokesDrag, 
+            //                                                    ReachTime = 2 });
+            spriteEntity.AddComponent(new PIDDriveComponent(64, 1, 5));
             spriteEntity.AddComponent(new MotionDirectionComponent { InputDirection = Vector2.Zero });
 
             //spriteEntity.AddComponent(new GravityComponent { Acceleration = Vector2.One * 980 });
@@ -68,12 +72,16 @@ namespace Sandbox
                 Enable = true,
                 Layer = playerLayer
             });
-            spriteEntity.AddComponent(new ColliderShapeComponent { Shape = new Circle(spriteEntity.GetComponent<TransformComponent>().Position, 70) });
-
+            spriteEntity.AddComponent(new ColliderShapeComponent { Shape = new Circle(spriteEntity.GetComponent<TransformComponent>().Position, 16) });
+            spriteEntity.AddComponent(new CollisionGizmoComponent
+            {
+                Color = Color.Crimson,
+                Alpha = 0.5f,
+            });
 
             EtherEntity obsticle = entityManager.MakeEntity();
             obsticle.AddComponent(new SpriteComponent(playerTexture));
-            obsticle.AddComponent(new TransformComponent { Position = new Vector2(300, 250), Scale = new Vector2(200, 200), Rotation = 0f });
+            obsticle.AddComponent(new TransformComponent { Position = new Vector2(300, 250), Scale = new Vector2(4, 4), Rotation = 0f });
             obsticle.AddComponent(new ColorComponent { Color = Color.Green });
 
             obsticle.AddComponent(new ColliderComponent 
@@ -81,12 +89,17 @@ namespace Sandbox
                 Enable = true,
                 Layer = objectLayer
             });
-            obsticle.AddComponent(new ColliderShapeComponent { Shape = new Circle(obsticle.GetComponent<TransformComponent>().Position, 60) });
+            obsticle.AddComponent(new CollisionGizmoComponent{
+               Color = Color.Crimson,
+               Alpha = 0.5f,
+            });
+            obsticle.AddComponent(new ColliderShapeComponent { Shape = new Circle(obsticle.GetComponent<TransformComponent>().Position, 64) });
 
 
             var camera = new CameraEntity(this);
-            camera.Follow(spriteEntity, new PIDDriveComponent(100, 1, 5, 10, 1));
-            //camera.Follow(spriteEntity);
+            //camera.Follow(spriteEntity, new PIDDriveComponent(128, 1, 5, 10, 1));
+            camera.GetComponent<TransformComponent>().Scale = new Vector2(3, 3);
+            camera.Follow(spriteEntity);
             MainCamera = camera;
         }
 

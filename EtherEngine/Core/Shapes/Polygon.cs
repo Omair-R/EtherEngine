@@ -22,7 +22,8 @@ namespace EtherEngine.Core.Shapes
 
         private Vector2[] _normals;
 
-        private void Setup(in Vector2[] vertices, bool preComputeNormals)
+
+        public Polygon(in Vector2[] vertices, bool preComputeNormals = true)
         {
             Vertices = vertices;
             _preComputeNormals = preComputeNormals;
@@ -31,16 +32,9 @@ namespace EtherEngine.Core.Shapes
                 _normals = GetNormals(true);
         }
 
-        public Polygon(in Vector2[] vertices, bool preComputeNormals = true)
-        {
-            Setup(in vertices, preComputeNormals);
-        }
 
-
-        public Polygon(in List<Vector2> vertices, bool preComputeNormals = true)
+        public Polygon(List<Vector2> vertices, bool preComputeNormals = true) : this(vertices.ToArray(), preComputeNormals)
         {
-            Vector2[] verticesArray = new Vector2[vertices.Count];
-            Setup(in verticesArray, preComputeNormals);
         }
 
         public Vector2[] GetEdges()

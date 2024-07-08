@@ -12,7 +12,4 @@
     <ProjectReference Include="..\EtherEngine\EtherEngine.csproj" />
     <ProjectReference Include="..\EtherUtils\EtherEngine.Utils.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MapObjects\" />
-  </ItemGroup>
 </Project>

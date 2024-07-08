@@ -11,33 +11,19 @@ namespace EtherEngine.Core.Shapes
     public class RotatableQuad : StaticQuad
     {
         private float _rotation;
+        private Vector2[] _normals;
+
         public float Rotation
         {
             get { return _rotation; }
             set
             {
                 _rotation = value;
-                _sin = MathF.Sin(_rotation);
-                _cos = MathF.Cos(_rotation);
-
-                _normals[0].X = _sin; //vector pointing up + rotation
-                _normals[0].Y = -_cos;
-
-                _normals[1].X = _cos; // vector pointing right + rotation
-                _normals[1].Y = _sin;
-
                 SetVertices();
             }
         }
 
-
-        private float _sin;
-        private float _cos;
-        private Vector2[] _normals;
-
         public Vector2[] Normals { get { return _normals; } }
-
-        private Vector2[] _unmovedVertices;
 
         public RotatableQuad(float x, float y, float width, float height, float rotation = 0.0f) :
             base(x, y, width, height)
@@ -46,12 +32,6 @@ namespace EtherEngine.Core.Shapes
             _normals[0] = Vector2.Zero;
             _normals[1] = Vector2.Zero; //initialize the normals to avoid allocation.
 
-            _unmovedVertices = new Vector2[4] {
-                    new Vector2(-width / 2, -height / 2),
-                    new Vector2(width / 2, -height / 2),
-                    new Vector2(width / 2, height / 2),
-                    new Vector2(-width / 2, height / 2),
-            }; // This is to avoid allocation every time the quad moves.
 
             Rotation = rotation;
         }
@@ -76,11 +56,19 @@ namespace EtherEngine.Core.Shapes
 
         protected new void SetVertices()
         {
-            //TODO: Optimize this.
-            _vertices[0] = _unmovedVertices[0];
-            _vertices[1] = _unmovedVertices[1];
-            _vertices[2] = _unmovedVertices[2];
-            _vertices[3] = _unmovedVertices[3];
+            float _sin = MathF.Sin(_rotation);
+            float _cos = MathF.Cos(_rotation);
+
+            _normals[0].X = _sin; //vector pointing up + rotation
+            _normals[0].Y = -_cos;
+
+            _normals[1].X = _cos; // vector pointing right + rotation
+            _normals[1].Y = _sin;
+
+            _vertices[0] = new Vector2(-Width / 2, -Height / 2);
+            _vertices[1] = new Vector2(Width / 2, -Height / 2);
+            _vertices[2] = new Vector2(Width / 2, Height / 2);
+            _vertices[3] = new Vector2(-Width / 2, Height / 2);
 
             float transX;
             float transY;

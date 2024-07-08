@@ -5,11 +5,12 @@ namespace EtherEngine.Core.Shapes
 {
     public class StaticQuad : IShape
     {
-        protected Vector2[] _vertices = new Vector2[4];
         protected float _x;
         protected float _y;
         protected float _width;
         protected float _height;
+
+        protected Vector2[] _vertices = new Vector2[4];
 
         public Vector2[] Vertices
         {

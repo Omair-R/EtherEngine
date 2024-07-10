@@ -131,7 +131,8 @@ namespace EtherEngine.Core.DrawBatch
 
         private void CheckCapacity(int checkVertices)
         {
-            if (checkVertices > _maxVerticesCount) throw new OverflowException("The number of vertices is higher than the maximum capacity of the vertex buffer."); ;
+            if (checkVertices > _maxVerticesCount) throw new OverflowException("The number of vertices is higher than the maximum capacity of the vertex buffer.");
+            if (checkVertices + _verticesCount > _maxVerticesCount) Flush();
         }
 
         public void DrawShape(IShape shape, Color color) //TODO: Optimize this

@@ -32,7 +32,7 @@ namespace EtherEngine.Systems
 
             foreach (ref var chunk in query)
             {
-                ref var entityFirstElement = ref chunk.Entity(0);
+                //ref var entityFirstElement = ref chunk.Entity(0);
                 chunk.GetSpan<TransformComponent, SpriteComponent, ColorComponent>(out var transforms, out var sprites, out var colors); //TODO: encapsulate.
 
                 foreach (var index in chunk)
@@ -41,14 +41,6 @@ namespace EtherEngine.Systems
                     ref var sprite = ref sprites[index];
                     ref var color = ref colors[index];
 
-                    //spriteBatch.Draw(sprite.Texture,
-                    //                GetDestinationRectangle(transform),
-                    //                sprite.SrcRect,
-                    //                color.Color,
-                    //                transform.Rotation,
-                    //                new Vector2(sprite.SrcRect.Width / 2, sprite.SrcRect.Height / 2),
-                    //                sprite.Effect,
-                    //                sprite.LayerDepth);
 
                     spriteBatch.Draw(sprite.Texture, 
                                     transform.Position, 

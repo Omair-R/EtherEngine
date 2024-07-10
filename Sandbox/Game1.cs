@@ -19,7 +19,7 @@ namespace Sandbox
         private EtherGui _etherGui;
         private GuiBatch _guiBatch;
 
-        private LdtkRenderer _ldtkRenderer;
+        private LdtkLoader ldtkLoader;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -44,10 +44,13 @@ namespace Sandbox
 
         protected override void LoadContent()
         {
-            _scene = new TestScene(GraphicsDevice, Content, _graphics);
-
             LdtkJson json = Content.Load<LdtkJson>("test");
-            _ldtkRenderer = new LdtkRenderer(json, Content, GraphicsDevice, _spriteBatch);
+            //_ldtkRenderer = new LdtkRenderer(json, Content, GraphicsDevice, _spriteBatch);
+            ldtkLoader = new LdtkLoader(json);
+
+            _scene = new TestScene(GraphicsDevice, Content, _graphics, ldtkLoader);
+
+         
             // TODO: use this.Content to load your game content here
             //_scene.LoadContent(Content);
         }
@@ -64,8 +67,9 @@ namespace Sandbox
 
         protected override void Draw(GameTime gameTime)
         {
-            //GraphicsDevice.Clear(Color.CornflowerBlue);
-            _ldtkRenderer.Draw(_scene.MainCamera);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            //_ldtkRenderer.Draw(_scene.MainCamera);
+            _scene.Draw();
 
             _guiBatch.Begin(gameTime);
 
@@ -74,9 +78,6 @@ namespace Sandbox
 
             // Call AfterLayout now to finish up and draw all the things
             _guiBatch.End();
-
-
-            _scene.Draw();
             base.Draw(gameTime);
         }
 

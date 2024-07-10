@@ -46,9 +46,11 @@ namespace EtherEngine.Systems.Collision
             ColliderShapeComponent currentColliderShape;
             Entity currentEntity;
 
+            CollisionHelper collisionHelper;
+
             _scene._world.Query(in queryDescription, (in Entity enitity, ref ColliderComponent collider, ref ColliderShapeComponent colliderShape) =>
             {
-                var collisionHelper = GetCollisionHelper(colliderShape);
+                collisionHelper = GetCollisionHelper(colliderShape);
 
                 currentCollider = collider;
                 currentColliderShape = colliderShape;
@@ -59,6 +61,8 @@ namespace EtherEngine.Systems.Collision
                     if (currentEntity == otherEnitity) return;
 
                     if (currentCollider.Layer != null && !currentCollider.Layer.ShouldCollide(otherCollider.Layer)) return;
+
+                    
 
                     collisionHappened = collisionHelper.CheckCollsion(currentColliderShape, otherShape, out Contact contact);
 
@@ -71,8 +75,13 @@ namespace EtherEngine.Systems.Collision
                             contact = contact,
                             layer = currentCollider.Layer,
                         });
+
+                        currentColliderShape.Shape.MoveCenter(currentColliderShape.Shape.GetCenter() - (contact.penetration * contact.collisionDirection)) ;
+                        
                     }
                 });
+
+                colliderShape.Shape = currentColliderShape.Shape;
             });
         }
 

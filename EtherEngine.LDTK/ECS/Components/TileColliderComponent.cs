@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace EtherEngine.LDTK.ECS.Components
 {
-    public struct TileIdComponent
+    public struct TileColliderComponent
     {
-        public int Id;
     }
 }

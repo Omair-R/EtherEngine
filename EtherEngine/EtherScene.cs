@@ -12,11 +12,11 @@ namespace EtherEngine
 {
     public abstract class EtherScene
     {
-        internal readonly World _world;
+        public readonly World _world;
 
         public readonly SpriteBatch spriteBatch;
         public readonly ShapeBatch shapeBatch;
-        public readonly GraphicsDeviceManager graphicsDeviceManager;
+        public readonly GraphicsDeviceManager graphicsDeviceManager; //TODO: reference to game instead.
         public readonly ContentManager contentManager;
 
         public readonly EntityManager entityManager;

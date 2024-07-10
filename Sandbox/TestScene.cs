@@ -14,6 +14,8 @@ using EtherEngine.Systems.Motion;
 using EtherEngine.Components.Graphics;
 using EtherEngine.Entities;
 using EtherEngine.Components.Relations;
+using EtherEngine.LDTK;
+using EtherEngine.LDTK.ECS.Systems;
 
 namespace Sandbox
 {
@@ -24,8 +26,9 @@ namespace Sandbox
 
         public TestScene(GraphicsDevice graphicsDevice,
                          ContentManager contentManager,
-                         GraphicsDeviceManager graphicsDeviceManager) : base(graphicsDevice, contentManager, graphicsDeviceManager)
+                         GraphicsDeviceManager graphicsDeviceManager, LdtkLoader ldtkLoader) : base(graphicsDevice, contentManager, graphicsDeviceManager)
         {
+            _systemManager.AddSystem(new RenderedLayerSystem(this));
             _systemManager.AddSystem(new FollowSystem(this));
             _systemManager.AddSystem(new AnimationSystem(this));
             _systemManager.AddSystem(new SpriteSystem(this));
@@ -37,7 +40,7 @@ namespace Sandbox
             _systemManager.AddSystem(new GravitySystem(this));
             _systemManager.AddSystem(new CollisionGizmoSystem(this));
             _systemManager.AddSystem(new CollisionSystem(this));
-            
+
 
             EtherEntity spriteEntity = entityManager.MakeEntity();
             _ = new Texture2D(graphicsDevice, 100, 100);
@@ -53,17 +56,17 @@ namespace Sandbox
                                  new SpriteComponent(animatedTexture),
                                  new SpriteAnimationComponent("idle", 11, 1, 0, 0, 0.1f));
 
-            spriteEntity.AddComponent(new TransformComponent { Position = new Vector2(30, 100), Scale = new Vector2(1, 1), Rotation = 0f});
+            spriteEntity.AddComponent(new TransformComponent { Position = new Vector2(50, 150), Scale = new Vector2(1, 1), Rotation = 0f});
             spriteEntity.AddComponent(new ColorComponent { Color = Color.White });
 
             spriteEntity.AddComponent(new MotionComponent { Velocity = Vector2.Zero });
             //spriteEntity.AddComponent(new DragDriveComponent { MaxVelocity = 64, 
             //                                                    DragType = DragTypes.StokesDrag, 
             //                                                    ReachTime = 2 });
-            spriteEntity.AddComponent(new PIDDriveComponent(64, 1, 5));
+            spriteEntity.AddComponent(new PIDDriveComponent(128, 1, 10));
             spriteEntity.AddComponent(new MotionDirectionComponent { InputDirection = Vector2.Zero });
 
-            //spriteEntity.AddComponent(new GravityComponent { Acceleration = Vector2.One * 980 });
+            spriteEntity.AddComponent(new GravityComponent { Acceleration = new Vector2(0,1) * 980 });
 
             playerLayer.CollidingLayers.Add(objectLayer);
 
@@ -101,6 +104,11 @@ namespace Sandbox
             camera.GetComponent<TransformComponent>().Scale = new Vector2(3, 3);
             camera.Follow(spriteEntity);
             MainCamera = camera;
+
+            ldtkLoader.LoadLevel(this, "Green_hills", "walls", 2);
+            ldtkLoader.ConnectToScene();
+
+            playerLayer.CollidingLayers.Add(ldtkLoader.CollisionLayer);
         }
 
 

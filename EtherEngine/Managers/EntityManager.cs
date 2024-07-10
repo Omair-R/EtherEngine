@@ -49,19 +49,44 @@ namespace EtherEngine.Managers
 
         public EtherEntity[] GetAllEntities()
         {
-            //Span<Entity> span = new Span<Entity>();
-            //_scene._world.GetEntities(new QueryDescription(), span);
-
-            //EtherEntity[] entities = new EtherEntity[span.Length];
-
-            //for (int i = 0; i < span.Length; i++)
-            //{
-            //    entities[i] = new EtherEntity(_scene, span[i]);
-            //}
-
-            //return entities;
-
             return _entityMap.Values.ToArray();
+        }
+
+        public EtherEntity[] GetEntities<T>()
+        {
+            return GetEntities(new QueryDescription().WithAll<T>());
+        }
+
+        public EtherEntity[] GetEntities(QueryDescription queryDescription)
+        {
+            Span<Entity> span = new Span<Entity>();
+            _scene._world.GetEntities(queryDescription, span);
+
+            EtherEntity[] entities = new EtherEntity[span.Length];
+
+            for (int i = 0; i < span.Length; i++)
+            {
+                entities[i] = new EtherEntity(_scene, span[i]);
+            }
+
+            return entities;
+        }
+
+        public void DestroyEntities(QueryDescription queryDescription)
+        {
+            Span<Entity> span = new Span<Entity>();
+            _scene._world.GetEntities(queryDescription, span);
+
+            for (int i = 0; i < span.Length; i++)
+            {
+                if(_entityMap.Remove(span[i].Get<IdComponent>().Id))
+                    _scene._world.Destroy(span[i]);
+            }
+        }
+
+        public void DestroyEntities<T>()
+        {
+            DestroyEntities(new QueryDescription().WithAll<T>()); ;
         }
 
 

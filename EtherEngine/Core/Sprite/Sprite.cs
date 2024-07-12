@@ -86,7 +86,7 @@ namespace EtherEngine.Core.Sprite
         { }
 
         public StaticQuad GetStaticQuad() => new StaticQuad(Center, Scale.X, Scale.Y);
-        public StaticQuad GetRotatableQuad() => new RotatableQuad(Center.X, Center.Y, Scale.X, Scale.Y, Rotation);
+        public RotatableQuad GetRotatableQuad() => new RotatableQuad(Center.X, Center.Y, Scale.X, Scale.Y, Rotation);
         public Rectangle GetDestinationRectangle() => new Rectangle((int)(Center.X - Scale.X / 2),
                                                                     (int)(Center.Y - Scale.Y / 2),
                                                                     (int)Scale.X,

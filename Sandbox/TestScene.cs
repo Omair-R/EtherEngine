@@ -106,7 +106,7 @@ namespace Sandbox
             MainCamera = camera;
 
             ldtkLoader.LoadLevel(this, "Green_hills", "walls", 2);
-            ldtkLoader.ConnectToScene();
+            ldtkLoader.TransferToScene();
 
             playerLayer.CollidingLayers.Add(ldtkLoader.CollisionLayer);
         }

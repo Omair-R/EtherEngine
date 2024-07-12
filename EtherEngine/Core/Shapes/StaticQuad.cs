@@ -3,58 +3,16 @@ using System;
 
 namespace EtherEngine.Core.Shapes
 {
-    public class StaticQuad : IShape
+    public struct StaticQuad : IShape
     {
-        protected float _x;
-        protected float _y;
-        protected float _width;
-        protected float _height;
+        public float X;
 
-        protected Vector2[] _vertices = new Vector2[4];
+        public float Y;
 
-        public Vector2[] Vertices
-        {
-            get { return _vertices; }
+        public float Width;
 
-        }
+        public float Height;
 
-        public float X
-        {
-            get => _x;
-            set
-            {
-                _x = value;
-                SetVertices();
-            }
-        }
-
-        public float Y
-        {
-            get => _y;
-            set
-            {
-                _y = value;
-                SetVertices();
-            }
-        }
-        public float Width
-        {
-            get => _width;
-            set
-            {
-                _width = value;
-                SetVertices();
-            }
-        }
-        public float Height
-        {
-            get => _height;
-            set
-            {
-                _height = value;
-                SetVertices();
-            }
-        }
 
         public Vector2 Center
         {
@@ -66,10 +24,22 @@ namespace EtherEngine.Core.Shapes
             }
         }
 
+        public Vector2[] Vertices
+        {
+            get
+            {
+                Vector2[] _vertices = new Vector2[4];
+                _vertices[0] = new Vector2(X - Width / 2, Y - Height / 2);
+                _vertices[1] = new Vector2(X + Width / 2, Y - Height / 2);
+                _vertices[2] = new Vector2(X + Width / 2, Y + Height / 2);
+                _vertices[3] = new Vector2(X - Width / 2, Y + Height / 2);
+                return _vertices;
+            }
+
+        }
 
         public StaticQuad(float x, float y, float width, float height)
         {
-
             X = x;
             Y = y;
             Width = width;
@@ -108,14 +78,6 @@ namespace EtherEngine.Core.Shapes
             return new Vector2(X, Y);
         }
 
-        protected void SetVertices()
-        {
-
-            _vertices[0] = new Vector2(X - Width / 2, Y - Height / 2);
-            _vertices[1] = new Vector2(X + Width / 2, Y - Height / 2);
-            _vertices[2] = new Vector2(X + Width / 2, Y + Height / 2);
-            _vertices[3] = new Vector2(X - Width / 2, Y + Height / 2);
-        }
 
         public bool ContainsPoint(Vector2 point)
         {
@@ -134,13 +96,6 @@ namespace EtherEngine.Core.Shapes
                 Y == quad.Y &&
                 Width == quad.Width &&
                 Height == quad.Height;
-        }
-
-        public override bool Equals(object obj)
-        {
-            StaticQuad quad = obj as StaticQuad;
-            if (quad == null) return false;
-            return Equals(quad);
         }
 
         public override int GetHashCode()

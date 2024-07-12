@@ -11,30 +11,34 @@ using System.Threading.Tasks;
 namespace EtherEngine.Systems.Collision
 {
 
+    public interface ICollisionHelper
+    {
+        public bool CheckCollsion(in ColliderShapeComponent currentShapeComponent, in ColliderShapeComponent otherShapeComponent, out Contact contact);
+    }
 
-    public class CollisionHelper
+    public class CollisionHelper<T> : ICollisionHelper where T : IShape
     {
         protected CollisionHelper()
         {
 
         }
 
-        public bool CheckCollsion(ColliderShapeComponent currentShapeComponent, ColliderShapeComponent otherShapeComponent, out Contact contact)
+        public bool CheckCollsion(in ColliderShapeComponent currentShapeComponent, in ColliderShapeComponent otherShapeComponent, out Contact contact)
         {
 
             switch (otherShapeComponent.Shape) // Change to expression?
             {
                 case Circle collider:
-                    return CheckCircleCollision(currentShapeComponent.Shape, collider, out contact);
+                    return CheckCircleCollision((T)currentShapeComponent.Shape, collider, out contact);
 
                 case RotatableQuad collider:
-                    return CheckRotatableQuadCollision(currentShapeComponent.Shape, collider, out contact);
+                    return CheckRotatableQuadCollision((T)currentShapeComponent.Shape, collider, out contact);
 
                 case StaticQuad collider:
-                    return CheckStaticQuadCollision(currentShapeComponent.Shape, collider, out contact);
+                    return CheckStaticQuadCollision((T)currentShapeComponent.Shape, collider, out contact);
 
                 case Polygon collider:
-                    return CheckPolygonCollision(currentShapeComponent.Shape, collider, out contact);
+                    return CheckPolygonCollision((T)currentShapeComponent.Shape, collider, out contact);
 
                 default:
                     throw new NotSupportedException();
@@ -42,22 +46,22 @@ namespace EtherEngine.Systems.Collision
 
         }
 
-        public virtual bool CheckCircleCollision(IShape current, Circle other, out Contact contact)
+        public virtual bool CheckCircleCollision(in T current, in Circle other, out Contact contact)
         {
             contact = null;
             return false;
         }
-        public virtual bool CheckStaticQuadCollision(IShape current, StaticQuad other, out Contact contact)
+        public virtual bool CheckStaticQuadCollision( in T current, in StaticQuad other, out Contact contact)
         {
             contact = null;
             return false;
         }
-        public virtual bool CheckRotatableQuadCollision(IShape current, RotatableQuad other, out Contact contact)
+        public virtual bool CheckRotatableQuadCollision(in T current, in RotatableQuad other, out Contact contact)
         {
             contact = null;
             return false;
         }
-        public virtual bool CheckPolygonCollision(IShape current, Polygon other, out Contact contact)
+        public virtual bool CheckPolygonCollision(in T current, in Polygon other, out Contact contact)
         {
             contact = null;
             return false;

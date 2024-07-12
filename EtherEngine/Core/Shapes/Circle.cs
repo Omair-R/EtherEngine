@@ -2,7 +2,7 @@
 
 namespace EtherEngine.Core.Shapes
 {
-    public class Circle : IShape
+    public struct Circle : IShape
     {
         public float Radius { get; set; }
         public Vector2 Center { get; set; }
@@ -24,12 +24,12 @@ namespace EtherEngine.Core.Shapes
             return Center == other.Center && Radius == other.Radius;
         }
 
-        public override bool Equals(object obj)
-        {
-            Circle other = obj as Circle;
-            if (other == null) return false;
-            return Equals(other);
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    Circle other = obj as Circle;
+        //    if (other == null) return false;
+        //    return Equals(other);
+        //}
 
         public override int GetHashCode()
         {

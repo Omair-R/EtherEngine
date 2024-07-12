@@ -1,10 +1,9 @@
 #### Major tasks: 
 - [X] <strike>LDtk support.</strike>
 - [X] <strike>LDtk rendering.</strike>
-- [ ] LDtk collisions.
+- [X] <strike>LDtk collisions.</strike>
 - [ ] Support for other primary shapes.
 - [X] <strike>Custom exceptions.</strike>
-- [ ] Texture pool?
 - [X] <strike>Entity relations.</strike>
 - [ ] Event bus. 
 - [ ] Rigid bodies.

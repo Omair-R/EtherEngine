@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace EtherEngine.Core.Shapes
 {
-    public class Polygon : IShape
+    public struct Polygon : IShape
     {
         private Vector2[] _vertices;
         public Vector2[] Vertices
@@ -25,11 +25,13 @@ namespace EtherEngine.Core.Shapes
 
         public Polygon(in Vector2[] vertices, bool preComputeNormals = true)
         {
-            Vertices = vertices;
+            _vertices = vertices;
             _preComputeNormals = preComputeNormals;
 
+            _normals = null;
+
             if (preComputeNormals)
-                _normals = GetNormals(true);
+                _normals = GetNormals();
         }
 
 
@@ -51,7 +53,7 @@ namespace EtherEngine.Core.Shapes
 
         public Vector2[] GetNormals(bool forceRecompute = false)
         {
-            if (_preComputeNormals && !forceRecompute)
+            if (_preComputeNormals && !forceRecompute && _normals.Length !=0)
                 return _normals;
 
             Vector2[] edges = GetEdges();
@@ -71,12 +73,12 @@ namespace EtherEngine.Core.Shapes
             return Vertices.SequenceEqual(other.Vertices);
         }
 
-        public override bool Equals(object obj)
-        {
-            Polygon other = obj as Polygon;
-            if (other == null) return false;
-            return Equals(other);
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    Polygon other = obj as Polygon;
+        //    if (other == null) return false;
+        //    return Equals(other);
+        //}
 
         public override int GetHashCode()
         {

@@ -5,7 +5,7 @@ using System;
 
 namespace EtherEngine.Systems.Collision
 {
-    public class PolygonCollisionHelper : CollisionHelper
+    public class PolygonCollisionHelper : CollisionHelper<Polygon>
     {
         protected static readonly Lazy<PolygonCollisionHelper> _lazyInstance = new Lazy<PolygonCollisionHelper>(
             () => new PolygonCollisionHelper()
@@ -15,24 +15,24 @@ namespace EtherEngine.Systems.Collision
             get { return _lazyInstance.Value; }
         }
         private PolygonCollisionHelper() { }
-        public override bool CheckCircleCollision(IShape current, Circle other, out Contact contact)
+        public override bool CheckCircleCollision(in Polygon current,in Circle other, out Contact contact)
         {
-            return CollisionUtils.CircleOnPolygonCollision(other, (Polygon)current, out contact, true);
+            return CollisionUtils.CircleOnPolygonCollision(other, current, out contact, true);
         }
 
-        public override bool CheckStaticQuadCollision(IShape current, StaticQuad other, out Contact contact)
+        public override bool CheckStaticQuadCollision(in Polygon current, in StaticQuad other, out Contact contact)
         {
-            return CollisionUtils.StaticQuadOnPolygonCollision(other, (Polygon)current, out contact, true);
+            return CollisionUtils.StaticQuadOnPolygonCollision(other, current, out contact, true);
         }
 
-        public override bool CheckRotatableQuadCollision(IShape current, RotatableQuad other, out Contact contact)
+        public override bool CheckRotatableQuadCollision( in Polygon current, in RotatableQuad other, out Contact contact)
         {
-            return CollisionUtils.RotatableQuadOnPolygonCollision(other, (Polygon)current, out contact, true);
+            return CollisionUtils.RotatableQuadOnPolygonCollision(other, current, out contact, true);
         }
 
-        public override bool CheckPolygonCollision(IShape current, Polygon other, out Contact contact)
+        public override bool CheckPolygonCollision(in Polygon current, in Polygon other, out Contact contact)
         {
-            return CollisionUtils.PolygonOnPolygonCollision((Polygon)current, other, out contact);
+            return CollisionUtils.PolygonOnPolygonCollision(current, other, out contact);
         }
     }
 }

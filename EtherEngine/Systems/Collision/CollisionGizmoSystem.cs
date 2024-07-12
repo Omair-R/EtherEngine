@@ -27,7 +27,7 @@ namespace EtherEngine.Systems.Collision
             else
                 shapeBatch.Begin();
 
-            foreach (Chunk chunk in query)
+            foreach (ref Chunk chunk in query)
             {
                 chunk.GetSpan<CollisionGizmoComponent, ColliderShapeComponent>(out var gizmos, out var shapes);
                 foreach(int i in chunk)

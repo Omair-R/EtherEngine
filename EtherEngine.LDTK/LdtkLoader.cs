@@ -29,7 +29,6 @@ namespace EtherEngine.LDTK
 
         private RenderTarget2D[] _renderedLayers;
         private Level _loadedLevel;
-
         private StaticQuad[] Colliders;
 
         public CollisionLayer CollisionLayer { get; private set; }
@@ -55,7 +54,6 @@ namespace EtherEngine.LDTK
         {
             Level level = _root.Levels.FirstOrDefault((x) => x.Identifier == identifer);
 
-            //TODO: Check for External separate levels.
             _scale = scale;
             _LoadLevel(scene, level, collisionLayer, useContentPipeline);
 
@@ -89,7 +87,7 @@ namespace EtherEngine.LDTK
         }
 
         // Connecting to a new scene results in the distruction of previously saved rendered layers.
-        public void ConnectToScene()
+        public void TransferToScene()
         {
             
             _scene.entityManager.DestroyEntities<RenderedLayerComponent>();
@@ -124,11 +122,18 @@ namespace EtherEngine.LDTK
                     Alpha = 0.4f,
                 });
                 entity.AddComponent(new ColliderShapeComponent { Shape = collider });
+                entity.AddComponent(new TransformComponent
+                {
+                    Position = collider.GetCenter(),
+                    Scale = Vector2.One,
+                    Rotation = 0f
+                });
 
             }
 
             Colliders = null;
             _renderedLayers = null;
+            _loadedLevel = null;
         }
 
         //TODO: make colors if no texture. + warning.
@@ -203,12 +208,24 @@ namespace EtherEngine.LDTK
         //Chekc for collision.
         private void DrawTiles(LayerInstance layer, Texture2D tilesetTexture, TileInstance[] tiles, string collisionLayer)
         {
+            bool collide = !string.IsNullOrEmpty(collisionLayer) && layer.Identifier == collisionLayer;
+            List<StaticQuad> colliders = new List<StaticQuad>();
+
             foreach (var tile in tiles)
             {
+                float x = (tile.Px.X + layer.PxTotalOffsetX);
+                float y = (tile.Px.Y + layer.PxTotalOffsetY);
+
+                if (collide)
+                    colliders.Add(new StaticQuad(new Vector2(x * _scale,
+                                                             y * _scale), 
+                                                 new Vector2((x + layer.GridSize) * _scale,
+                                                             (y + layer.GridSize) * _scale)));
+
                 _scene.spriteBatch.Draw(tilesetTexture,
                                         new Rectangle(
-                                            tile.Px.X + layer.PxTotalOffsetX,
-                                            tile.Px.Y + layer.PxTotalOffsetY,
+                                            (int)x,
+                                            (int)y,
                                             layer.GridSize,
                                             layer.GridSize), new Rectangle(
                                                 tile.Src.X,
@@ -217,6 +234,9 @@ namespace EtherEngine.LDTK
                                                 layer.GridSize),
                                         new Color(Color.White, tile.A * layer.Opacity), 0, Vector2.Zero, (SpriteEffects)tile.F, 0f);
             }
+
+            if (collide)
+                Colliders = colliders.ToArray();
         }
 
         private void DrawIntGridTiles(LayerInstance layer, Texture2D tilesetTexture, LayerDefinition layerDefinition, string collisionLayer)
@@ -226,32 +246,30 @@ namespace EtherEngine.LDTK
 
             List<StaticQuad> colliders = new List<StaticQuad>();
 
-            if (!string.IsNullOrEmpty(collisionLayer))
+            for (int i = 0; i < layer.IntGridCsv.Length; i++)
             {
-                for (int i = 0; i < layer.IntGridCsv.Length; i++)
+                if (intGridMap.TryGetValue(layer.IntGridCsv[i], out var intGrid))
                 {
-                    if (intGridMap.TryGetValue(layer.IntGridCsv[i], out var intGrid) && intGrid.Identifier == collisionLayer)
-                    {
-                        int x = (i % layer.GridBasedWidth) * layer.GridSize * (int)_scale;
-                        int y = (i / layer.GridBasedHeight) * layer.GridSize * (int)_scale;
-                        colliders.Add(new StaticQuad(new Vector2(x, y), new Vector2(x + layer.GridSize * _scale, y + layer.GridSize * _scale)));
+                    int x = (i % layer.GridBasedWidth) * layer.GridSize * (int)_scale;
+                    int y = (i / layer.GridBasedHeight) * layer.GridSize * (int)_scale;
 
-                        if (layer.AutoLayerTiles.Length == 0)
-                        {
-                            _scene.spriteBatch.Draw(tilesetTexture,
-                                            new Rectangle(
-                                                x,
-                                                y,
-                                                layer.GridSize,
-                                                layer.GridSize), new Rectangle(
-                                                    intGrid.Tile.X,
-                                                    intGrid.Tile.Y,
-                                                    intGrid.Tile.W,
-                                                    intGrid.Tile.H),
-                                            intGridMap[layer.IntGridCsv[i]].Color);
-                        }
-                    }
-
+                    if(intGrid.Identifier == collisionLayer && !string.IsNullOrEmpty(collisionLayer))
+                        colliders.Add(new StaticQuad(new Vector2(x,
+                                                                 y),
+                                                     new Vector2(x + layer.GridSize * _scale,
+                                                                 y + layer.GridSize * _scale)));
+                    if (layer.AutoLayerTiles.Length == 0)
+                        _scene.spriteBatch.Draw(tilesetTexture,
+                                                new Rectangle(
+                                                    x,
+                                                    y,
+                                                    layer.GridSize,
+                                                    layer.GridSize), new Rectangle(
+                                                        intGrid.Tile.X,
+                                                        intGrid.Tile.Y,
+                                                        intGrid.Tile.W,
+                                                        intGrid.Tile.H),
+                                                intGridMap[layer.IntGridCsv[i]].Color);
                 }
             }
 

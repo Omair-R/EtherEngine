@@ -11,7 +11,7 @@ namespace EtherEngine.Entities
 {
     public class CameraEntity : EntityWrapper
     {
-        public CameraEntity(EtherScene scene, Guid? id = null, string tag = null) : base(scene.entityManager.MakeEntity(id, tag), scene)
+        public CameraEntity(EtherScene scene, Guid? id = null, string tag = null) : base(scene.EntityManager.MakeEntity(id, tag), scene)
         {
             _entity.AddComponent(new CameraComponent());
             _entity.AddComponent(new TransformComponent());
@@ -40,7 +40,7 @@ namespace EtherEngine.Entities
         {
             ref var transform = ref _entity.GetComponent<TransformComponent>();
 
-            return _GetTransform(transform, _scene._graphicsDevice.Viewport);
+            return _GetTransform(transform, _scene.GraphicsDevice.Viewport);
         }
 
         public void Follow(EtherEntity entity)

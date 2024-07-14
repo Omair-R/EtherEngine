@@ -23,8 +23,8 @@ namespace EtherEngine.Entities
         {
             ref var id = ref entityHandle.Get<IdComponent>();
 
-            if (scene.entityManager.HasEntity(id.Id))
-                return scene.entityManager.GetEntity(id.Id);
+            if (scene.EntityManager.HasEntity(id.Id))
+                return scene.EntityManager.GetEntity(id.Id);
 
             else throw new Exception("Entity does not exist, please create entities through the entity manager.");
         }

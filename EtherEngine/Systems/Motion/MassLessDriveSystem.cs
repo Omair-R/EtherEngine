@@ -12,17 +12,17 @@ namespace EtherEngine.Systems.Motion
 {
     public class MassLessDriveSystem : UpdatableSystem
     {
-        QueryDescription queryDescription = new QueryDescription().WithAll<MotionComponent,
-                                                                            MotionDirectionComponent,
-                                                                            MasslessDriveComponent>();
         public MassLessDriveSystem(EtherScene scene) : base(scene)
         {
+            queryDescription = new QueryDescription().WithAll<MotionComponent,
+                                                              MotionDirectionComponent,
+                                                              MasslessDriveComponent>();
         }
 
-        public override void Update(in GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _scene._world.Query(in queryDescription, (ref MotionComponent motion,
+            _scene.EntityManager.Registry.Query(in queryDescription, (ref MotionComponent motion,
                                                       ref MotionDirectionComponent input,
                                                       ref MasslessDriveComponent masslessDrive) =>
             {

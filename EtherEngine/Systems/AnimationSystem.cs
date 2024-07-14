@@ -8,16 +8,15 @@ namespace EtherEngine.Systems
 
     public class AnimationSystem : UpdatableSystem
     {
-        QueryDescription queryDescription = new QueryDescription().WithAll<SpriteAnimationComponent, SpriteComponent>();
-
         public AnimationSystem(EtherScene scene) : base(scene)
         {
+            queryDescription = new QueryDescription().WithAll<SpriteAnimationComponent, SpriteComponent>();
         }
 
-        public override void Update(in GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Query query = _scene._world.Query(in queryDescription);
+            Query query = _scene.EntityManager.Registry.Query(in queryDescription);
 
             foreach (ref Chunk chunk in query)
             {

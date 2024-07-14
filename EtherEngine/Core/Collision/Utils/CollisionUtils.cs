@@ -11,7 +11,7 @@ namespace EtherEngine.Core.Collision.Utils
 
         #region SimilarShapes
         // Tested
-        static public bool CircleOnCircleCollision(Circle circleA, Circle circleB, out Contact contact)
+        static public bool CircleOnCircleCollision(in Circle circleA, in Circle circleB, out Contact contact)
         {
             float combinedRadius = circleA.Radius + circleB.Radius;
 
@@ -34,7 +34,7 @@ namespace EtherEngine.Core.Collision.Utils
         }
 
         //Tested
-        static public bool StaticQuadOnStaticQuadCollision(StaticQuad quadA, StaticQuad quadB, out Contact contact)
+        static public bool StaticQuadOnStaticQuadCollision(in StaticQuad quadA, in StaticQuad quadB, out Contact contact)
         {
             //Skips all the expensive projections.
             Vector2 minA = quadA.GetMin();
@@ -68,7 +68,7 @@ namespace EtherEngine.Core.Collision.Utils
             return true;
         }
 
-        static public bool RotatableQuadOnRotatableQuadCollision(RotatableQuad quadA, RotatableQuad quadB, out Contact contact)
+        static public bool RotatableQuadOnRotatableQuadCollision(in RotatableQuad quadA, in RotatableQuad quadB, out Contact contact)
         {
             Vector2[] normals = new Vector2[4];
 
@@ -87,7 +87,7 @@ namespace EtherEngine.Core.Collision.Utils
             return true;
         }
 
-        static public bool PolygonOnPolygonCollision(Polygon polygonA, Polygon polygonB, out Contact contact)
+        static public bool PolygonOnPolygonCollision(in Polygon polygonA, in Polygon polygonB, out Contact contact)
         {
             Vector2[] normals = new Vector2[polygonA.Vertices.Length + polygonB.Vertices.Length];
 
@@ -109,7 +109,7 @@ namespace EtherEngine.Core.Collision.Utils
 
         #region NonSimilarShapes
         //Tested
-        static public bool CircleOnStaticQuadCollision(Circle circle, StaticQuad quad, out Contact contact, bool isOpposite = false)
+        static public bool CircleOnStaticQuadCollision(in Circle circle, in StaticQuad quad, out Contact contact, bool isOpposite = false)
         {
             Vector2 DistanceVector = circle.Center - quad.GetCenter();
             Vector2 HalfWidthHeight = new Vector2(quad.Width / 2, quad.Height / 2);
@@ -138,7 +138,7 @@ namespace EtherEngine.Core.Collision.Utils
             return true;
         }
 
-        static public bool CircleOnRotatableQuadCollision(Circle circle, RotatableQuad quad, out Contact contact, bool isOpposite = false)
+        static public bool CircleOnRotatableQuadCollision(in Circle circle, in RotatableQuad quad, out Contact contact, bool isOpposite = false)
         {
             Vector2[] normals = new Vector2[3];
             normals[0] = SPA.ClosestVector(quad.Vertices, circle.Center);
@@ -156,7 +156,7 @@ namespace EtherEngine.Core.Collision.Utils
         }
 
         //Tested
-        static public bool StaticQuadOnRotatableQuadCollision(StaticQuad staticQuad, RotatableQuad rotatableQuad, out Contact contact, bool isOpposite = false)
+        static public bool StaticQuadOnRotatableQuadCollision(in StaticQuad staticQuad, in RotatableQuad rotatableQuad, out Contact contact, bool isOpposite = false)
         {
             Vector2[] normals = new Vector2[4];
 
@@ -177,7 +177,7 @@ namespace EtherEngine.Core.Collision.Utils
         }
 
         // Polygons -- Leaving this to later
-        static public bool CircleOnPolygonCollision(Circle circle, Polygon polygon, out Contact contact, bool isOpposite = false)
+        static public bool CircleOnPolygonCollision(in Circle circle, in Polygon polygon, out Contact contact, bool isOpposite = false)
         {
             Vector2[] normals = new Vector2[polygon.Vertices.Length + 1];
 
@@ -194,7 +194,7 @@ namespace EtherEngine.Core.Collision.Utils
             return true;
         }
 
-        static public bool StaticQuadOnPolygonCollision(StaticQuad quad, Polygon polygon, out Contact contact, bool isOpposite = false)
+        static public bool StaticQuadOnPolygonCollision(in StaticQuad quad, in Polygon polygon, out Contact contact, bool isOpposite = false)
         {
             Vector2[] normals = new Vector2[polygon.Vertices.Length + 2];
 
@@ -212,7 +212,7 @@ namespace EtherEngine.Core.Collision.Utils
             return true;
         }
 
-        static public bool RotatableQuadOnPolygonCollision(RotatableQuad quad, Polygon polygon, out Contact contact, bool isOpposite = false)
+        static public bool RotatableQuadOnPolygonCollision(in RotatableQuad quad, in Polygon polygon, out Contact contact, bool isOpposite = false)
         {
             Vector2[] normals = new Vector2[polygon.Vertices.Length + 2];
 

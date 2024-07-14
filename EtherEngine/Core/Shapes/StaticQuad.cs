@@ -46,7 +46,7 @@ namespace EtherEngine.Core.Shapes
             Height = height;
         }
 
-        public StaticQuad(Vector2 center, float width, float height)
+        public StaticQuad(in Vector2 center, float width, float height)
         {
             X = center.X;
             Y = center.Y;
@@ -54,7 +54,7 @@ namespace EtherEngine.Core.Shapes
             Height = height;
         }
 
-        public StaticQuad(Vector2 min, Vector2 max)
+        public StaticQuad(in Vector2 min, in Vector2 max)
         {
             Width = max.X - min.X;
             Height = max.Y - min.Y;
@@ -79,7 +79,7 @@ namespace EtherEngine.Core.Shapes
         }
 
 
-        public bool ContainsPoint(Vector2 point)
+        public bool ContainsPoint(in Vector2 point)
         {
             var min = GetMin();
             var max = GetMax();
@@ -90,7 +90,7 @@ namespace EtherEngine.Core.Shapes
                 point.Y <= max.Y;
         }
 
-        public bool Equals(StaticQuad quad)
+        public bool Equals(in StaticQuad quad)
         {
             return X == quad.X &&
                 Y == quad.Y &&
@@ -108,7 +108,7 @@ namespace EtherEngine.Core.Shapes
             return $"Quad:X={X}, Y={Y}, Width={Width}, Height={Height}";
         }
 
-        public void MoveCenter(Vector2 target)
+        public void MoveCenter(in Vector2 target)
         {
             X = target.X;
             Y = target.Y;

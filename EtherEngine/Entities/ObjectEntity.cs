@@ -9,7 +9,7 @@ namespace EtherEngine.Entities
 {
     internal class ObjectEntity : EntityWrapper
     {
-        public ObjectEntity(EtherScene scene, Guid? id = null, string tag = null) : base(scene.entityManager.MakeEntity(id, tag), scene)
+        public ObjectEntity(EtherScene scene, Guid? id = null, string tag = null) : base(scene.EntityManager.MakeEntity(id, tag), scene)
         {
             _entity.AddComponent(new TransformComponent());
         }

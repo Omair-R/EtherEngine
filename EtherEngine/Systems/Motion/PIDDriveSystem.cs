@@ -11,15 +11,15 @@ namespace EtherEngine.Systems.Motion
 {
     public class PIDDriveSystem : UpdatableSystem
     {
-        QueryDescription queryDescription = new QueryDescription().WithAll<MotionComponent, MotionDirectionComponent, PIDDriveComponent>();
         public PIDDriveSystem(EtherScene scene) : base(scene)
         {
+            queryDescription = new QueryDescription().WithAll<MotionComponent, MotionDirectionComponent, PIDDriveComponent>();
         }
 
-        public override void Update(in GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _scene._world.Query(in queryDescription, (ref MotionComponent motion,
+            _scene.EntityManager.Registry.Query(in queryDescription, (ref MotionComponent motion,
                                                       ref MotionDirectionComponent input,
                                                       ref PIDDriveComponent pid) =>
             {

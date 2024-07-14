@@ -135,7 +135,7 @@ namespace EtherEngine.Core.DrawBatch
             if (checkVertices + _verticesCount > _maxVerticesCount) Flush();
         }
 
-        public void DrawShape(IShape shape, Color color) //TODO: Optimize this
+        public void DrawShape(in IShape shape, in Color color) //TODO: Optimize this
         {
             if (shape is Circle circle)
             {
@@ -179,12 +179,12 @@ namespace EtherEngine.Core.DrawBatch
             _vertices[_verticesCount++] = top_right;
         }
 
-        virtual public void DrawRectangle(StaticQuad quad, Color color)
+        virtual public void DrawRectangle(in StaticQuad quad, in Color color)
         {
             DrawRectangle(quad.X - quad.Width / 2, quad.Y - quad.Height / 2, quad.Width, quad.Height, color);
         }
 
-        virtual public void DrawRectangle(RotatableQuad quad, Color color)
+        virtual public void DrawRectangle(in RotatableQuad quad,in Color color)
         {
             Vector2[] quadVertices = quad.Vertices;
             CheckCapacity(quadVertices.Length);
@@ -204,7 +204,7 @@ namespace EtherEngine.Core.DrawBatch
             };
         }
 
-        virtual public void DrawCircle(Circle circle, Color color, int resolution)
+        virtual public void DrawCircle(in Circle circle, in Color color, int resolution)
         {
 
             resolution = MathHelper.Clamp(resolution, 5, 256);
@@ -232,7 +232,7 @@ namespace EtherEngine.Core.DrawBatch
             }
         }
 
-        virtual public void DrawPolygon(Polygon polygon, Color color)
+        virtual public void DrawPolygon(in Polygon polygon, in Color color)
         {
             CheckCapacity(polygon.Vertices.Length);
 

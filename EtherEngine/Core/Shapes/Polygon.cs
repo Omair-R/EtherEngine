@@ -68,7 +68,7 @@ namespace EtherEngine.Core.Shapes
             return normals;
         }
 
-        public bool Equals(Polygon other)
+        public bool Equals(in Polygon other)
         {
             return Vertices.SequenceEqual(other.Vertices);
         }
@@ -110,7 +110,7 @@ namespace EtherEngine.Core.Shapes
             return center;
         }
 
-        public bool ContainsPoint(Vector2 point)
+        public bool ContainsPoint(in Vector2 point)
         {
             foreach (Vector2 normal in GetNormals())
             {
@@ -124,7 +124,7 @@ namespace EtherEngine.Core.Shapes
             return true;
         }
 
-        public static Vector2 MinMaxProjection(Polygon poly, Vector2 axis)
+        public static Vector2 MinMaxProjection(in Polygon poly, in Vector2 axis)
         {
             float min = float.MaxValue;
             float max = float.MinValue;
@@ -139,7 +139,7 @@ namespace EtherEngine.Core.Shapes
             return new Vector2(min, max);
         }
 
-        public static void BondingBox(Polygon poly, out Vector2 min, out Vector2 max)
+        public static void BondingBox(in Polygon poly, out Vector2 min, out Vector2 max)
         {
             min = new Vector2(float.MaxValue, float.MaxValue);
             max = new Vector2(float.MinValue, float.MinValue);
@@ -158,7 +158,7 @@ namespace EtherEngine.Core.Shapes
 
         }
 
-        public void MoveCenter(Vector2 target)
+        public void MoveCenter(in Vector2 target)
         {
             throw new NotImplementedException();
         }

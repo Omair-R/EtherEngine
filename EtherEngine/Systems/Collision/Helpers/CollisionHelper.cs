@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EtherEngine.Systems.Collision
+namespace EtherEngine.Systems.Collision.Helpers
 {
 
     public interface ICollisionHelper
@@ -51,7 +51,7 @@ namespace EtherEngine.Systems.Collision
             contact = null;
             return false;
         }
-        public virtual bool CheckStaticQuadCollision( in T current, in StaticQuad other, out Contact contact)
+        public virtual bool CheckStaticQuadCollision(in T current, in StaticQuad other, out Contact contact)
         {
             contact = null;
             return false;

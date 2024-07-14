@@ -3,7 +3,7 @@ using EtherEngine.Core.Collision.Utils;
 using EtherEngine.Core.Shapes;
 using System;
 
-namespace EtherEngine.Systems.Collision
+namespace EtherEngine.Systems.Collision.Helpers
 {
     public class RotatableQuadCollisionHelper : CollisionHelper<RotatableQuad>
     {

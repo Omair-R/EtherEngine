@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EtherEngine.Systems.Collision
+namespace EtherEngine.Systems.Collision.Helpers
 {
     public class StaticQuadCollisionHelper : CollisionHelper<StaticQuad>
     {

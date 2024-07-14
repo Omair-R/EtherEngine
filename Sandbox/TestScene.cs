@@ -16,6 +16,8 @@ using EtherEngine.Entities;
 using EtherEngine.Components.Relations;
 using EtherEngine.LDTK;
 using EtherEngine.LDTK.ECS.Systems;
+using EtherEngine.Systems.Event;
+using EtherEngine.Components.Particles;
 
 namespace Sandbox
 {
@@ -24,11 +26,13 @@ namespace Sandbox
         private CollisionLayer objectLayer = new CollisionLayer(new HashSet<CollisionLayer>());
         private CollisionLayer playerLayer = new CollisionLayer(new HashSet<CollisionLayer>());
 
-        public TestScene(GraphicsDevice graphicsDevice,
-                         ContentManager contentManager,
-                         GraphicsDeviceManager graphicsDeviceManager, LdtkLoader ldtkLoader) : base(graphicsDevice, contentManager, graphicsDeviceManager)
+        LdtkLoader ldtkLoader;
+
+        public TestScene(Game game) : base(game)
         {
             _systemManager.AddSystem(new RenderedLayerSystem(this));
+            _systemManager.AddSystem(new ParticlesEmitterSystem(this));
+            _systemManager.AddSystem(new ParticleSystem(this));
             _systemManager.AddSystem(new FollowSystem(this));
             _systemManager.AddSystem(new AnimationSystem(this));
             _systemManager.AddSystem(new SpriteSystem(this));
@@ -36,17 +40,17 @@ namespace Sandbox
             _systemManager.AddSystem(new DragDriveSystem(this));
             _systemManager.AddSystem(new PIDDriveSystem(this));
             _systemManager.AddSystem(new MotionSystem(this));
-
+            _systemManager.AddSystem(new KillEntitiyEventSystem(this));
             _systemManager.AddSystem(new GravitySystem(this));
             _systemManager.AddSystem(new CollisionGizmoSystem(this));
             _systemManager.AddSystem(new CollisionSystem(this));
 
 
-            EtherEntity spriteEntity = entityManager.MakeEntity();
-            _ = new Texture2D(graphicsDevice, 100, 100);
+            EtherEntity spriteEntity = EntityManager.MakeEntity();
+            _ = new Texture2D(Game.GraphicsDevice, 100, 100);
 
-            Texture2D playerTexture = contentManager.Load<Texture2D>("fall");
-            Texture2D animatedTexture = contentManager.Load<Texture2D>("Idle");
+            Texture2D playerTexture = Game.Content.Load<Texture2D>("fall");
+            Texture2D animatedTexture = Game.Content.Load<Texture2D>("Idle");
 
             var animationManager = AnimationManager.Instance;
 
@@ -72,6 +76,7 @@ namespace Sandbox
 
             spriteEntity.AddComponent(new ColliderComponent
             {
+                CollisionType = CollisionType.Dynamic,
                 Enable = true,
                 Layer = playerLayer
             });
@@ -82,13 +87,14 @@ namespace Sandbox
                 Alpha = 0.5f,
             });
 
-            EtherEntity obsticle = entityManager.MakeEntity();
+            EtherEntity obsticle = EntityManager.MakeEntity();
             obsticle.AddComponent(new SpriteComponent(playerTexture));
             obsticle.AddComponent(new TransformComponent { Position = new Vector2(300, 250), Scale = new Vector2(4, 4), Rotation = 0f });
             obsticle.AddComponent(new ColorComponent { Color = Color.Green });
 
             obsticle.AddComponent(new ColliderComponent 
             { 
+                CollisionType = CollisionType.Trigger,
                 Enable = true,
                 Layer = objectLayer
             });
@@ -98,6 +104,44 @@ namespace Sandbox
             });
             obsticle.AddComponent(new ColliderShapeComponent { Shape = new Circle(obsticle.GetComponent<TransformComponent>().Position, 64) });
 
+            EtherEntity particleEmitter = EntityManager.MakeEntity();
+
+            particleEmitter.AddComponent(new ParticleEmitterComponent { 
+                Repeat = true,
+                Amount = 100,
+                Timer = new Timer(0.5f),
+            });
+            particleEmitter.AddComponent(new ParticleInstructionComponent
+            {
+                 Position = new Vector2(140, 250),
+                 Spread = new Vector2(30, 10),
+
+                 InitVelocity = new Vector2(0, -100),
+                 InitVelocityVariance = 3,
+
+                 Acceleration = new Vector2(0, -50),
+                 Damping = 30,
+
+                 Angle = 0,
+                 AngleVariance = 0,
+                 AngularVelocity = 0,
+
+                 ScaleBegin = 0.3f,
+                 ScaleEnd = 0,
+                 ScaleVariance = 0.1f,
+
+                 ColorBegin = Color.Blue,
+                 ColorEnd = Color.Gray,
+                 HueVariance  = 0,
+
+                 AlphaBegin = 0.6f,
+                 AlphaEnd = 0,
+                 AlphaVariance =0.2f,
+
+                 LifeTime = 0.7f,
+                 LifeTimeVariance = 0.3f,
+            });
+            particleEmitter.AddComponent(new SpriteComponent(playerTexture));
 
             var camera = new CameraEntity(this);
             //camera.Follow(spriteEntity, new PIDDriveComponent(128, 1, 5, 10, 1));
@@ -105,7 +149,11 @@ namespace Sandbox
             camera.Follow(spriteEntity);
             MainCamera = camera;
 
-            ldtkLoader.LoadLevel(this, "Green_hills", "walls", 2);
+            LdtkJson json = Game.Content.Load<LdtkJson>("test");
+            //_ldtkRenderer = new LdtkRenderer(json, Content, GraphicsDevice, _spriteBatch);
+            ldtkLoader = new LdtkLoader(json, this);
+
+            ldtkLoader.LoadLevel("Green_hills", "walls", 2);
             ldtkLoader.TransferToScene();
 
             playerLayer.CollidingLayers.Add(ldtkLoader.CollisionLayer);

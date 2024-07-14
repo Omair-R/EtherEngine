@@ -4,6 +4,12 @@ using Microsoft.Xna.Framework;
 
 namespace EtherEngine.Components
 {
+    public enum CollisionType
+    {
+        Static,
+        Dynamic, 
+        Trigger,
+    }
 
     public struct CollisionGizmoComponent
     {
@@ -19,13 +25,15 @@ namespace EtherEngine.Components
 
     public struct ColliderComponent
     {
+        public CollisionType CollisionType;
         public CollisionLayer Layer;
         public bool Enable;
 
-        public ColliderComponent(CollisionLayer layer)
+        public ColliderComponent(CollisionLayer layer, CollisionType type)
         {
             Layer = layer;
             Enable = true;
+            CollisionType = type;
         }
     }
 

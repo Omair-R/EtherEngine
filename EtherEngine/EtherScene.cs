@@ -2,6 +2,8 @@
 using EtherEngine.Core.DrawBatch;
 using EtherEngine.Entities;
 using EtherEngine.Managers;
+using EtherEngine.Systems;
+using EtherEngine.Systems.Event;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,65 +14,46 @@ namespace EtherEngine
 {
     public abstract class EtherScene
     {
-        public readonly World _world;
-
-        public readonly SpriteBatch spriteBatch;
-        public readonly ShapeBatch shapeBatch;
-        public readonly GraphicsDeviceManager graphicsDeviceManager; //TODO: reference to game instead.
-        public readonly ContentManager contentManager;
-
-        public readonly EntityManager entityManager;
-        protected readonly SystemManager _systemManager;
-
-        public readonly GraphicsDevice _graphicsDevice;
-
+        public Game Game { get; init; }
+        public EntityManager EntityManager { get; init; }
+        public ContentManager ContentManager { get; init; }
+        public GraphicsDevice GraphicsDevice { get; init; }
+        public ShapeBatch ShapeBatch { get; protected set; }
+        public SpriteBatch SpriteBatch { get; protected set; }
         public CameraEntity MainCamera {  get; set; }
-
         public bool IsPaused { get; private set; }
 
-        protected EtherScene(GraphicsDevice graphicsDevice,
-                             ContentManager contentManager,
-                             GraphicsDeviceManager graphicsDeviceManager)
-        { 
-            _world = World.Create(); //TODO: move this to manager
-            entityManager = new EntityManager(this); //TODO: Kill all managers.
-            this.graphicsDeviceManager = graphicsDeviceManager;
-            spriteBatch = new SpriteBatch(graphicsDevice);
-            shapeBatch = new ShapeBatch(graphicsDevice);
-            this.contentManager = contentManager;
+        protected readonly SystemManager _systemManager;
 
-            _graphicsDevice = graphicsDevice;
+        public event EventHandler BeforeDraw;
+        public event EventHandler AfterDraw;
+        public event EventHandler BeforeUpdate;
+        public event EventHandler AfterUpdate;
+
+        protected EtherScene(Game game)
+        { 
+            Game = game;
+
+            EntityManager = new EntityManager(this); //TODO: Kill all managers.
+
+            ContentManager = Game.Content;
+            GraphicsDevice = Game.GraphicsDevice;
+
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
+            ShapeBatch  = new ShapeBatch(GraphicsDevice);
 
             _systemManager = new SystemManager();
 
-            EtherWorld world = new EtherWorld();
         }
-        protected virtual bool BeginDraw() 
-        {
-            return true;
-        }
-
-        protected virtual void EndDraw() 
-        {
-        }
-
-        protected virtual void BeginRun()
-        {
-        }
-
-        protected virtual void EndRun()
-        {
-        }
-
         public virtual void Initialize()
         {
         }
 
-        protected virtual void LoadContent()
+        public virtual void LoadContent()
         {
         }
 
-        protected virtual void UnloadContent()
+        public virtual void UnloadContent()
         {
         }
 
@@ -81,9 +64,14 @@ namespace EtherEngine
 
         public virtual void Draw()
         {
-            _systemManager.Draw(spriteBatch, shapeBatch);
+            _systemManager.Draw(SpriteBatch, ShapeBatch);
         }
 
+        public void TriggerEvent<T>(in T eventComponent, EtherSystem senderSystem) where T : struct, IEvent
+        {
+            senderSystem.TriggersEvents = true;
+            EntityManager.Registry.Add(eventComponent.Sender, eventComponent);
+        }
 
     }
 }

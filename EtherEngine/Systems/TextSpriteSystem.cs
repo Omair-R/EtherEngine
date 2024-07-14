@@ -11,16 +11,16 @@ namespace EtherEngine.Systems
 {
     public class TextSpriteSystem : DrawableSystem
     {
-        QueryDescription queryDescription = new QueryDescription().WithAll<TextSpriteComponent, TransformComponent, ColorComponent>();
         public TextSpriteSystem(EtherScene scene) : base(scene)
         {
+            queryDescription = new QueryDescription().WithAll<TextSpriteComponent, TransformComponent, ColorComponent>();
         }
 
         public override void Draw(SpriteBatch spriteBatch, ShapeBatch shapeBatch)
         {
-            Query query = _scene._world.Query(in queryDescription);
+            Query query = _scene.EntityManager.Registry.Query(in queryDescription);
 
-            _scene.spriteBatch.Begin();
+            spriteBatch.Begin();
             foreach (ref Chunk chunk in query)
             {
                 chunk.GetSpan<TextSpriteComponent, TransformComponent, ColorComponent>(out var textSprites, out var transforms, out var colors);
@@ -31,6 +31,7 @@ namespace EtherEngine.Systems
                     ref var transform = ref transforms[index];
                     ref var color = ref colors[index];
 
+                    //TODO: finish This.
                     //sprite.Writer.Write(_scene._spriteBatch,
                     //                    sprite.Text,
                     //                    transform.Position,
@@ -42,7 +43,7 @@ namespace EtherEngine.Systems
 
 
             }
-            _scene.spriteBatch.End();
+            spriteBatch.End();
         }
     }
 }

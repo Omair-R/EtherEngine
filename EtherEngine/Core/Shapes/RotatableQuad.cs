@@ -102,11 +102,11 @@ namespace EtherEngine.Core.Shapes
             SetVertices();
         }
 
-        public RotatableQuad(Vector2 center, float width, float height, float rotation = 0.0f) :
+        public RotatableQuad(in Vector2 center, float width, float height, float rotation = 0.0f) :
             this(center.X, center.Y, width, height, rotation)
         { }
 
-        public RotatableQuad(StaticQuad quad, float rotation = 0.0f) :
+        public RotatableQuad(in StaticQuad quad, float rotation = 0.0f) :
             this(quad.X, quad.Y, quad.Width, quad.Height, rotation)
         { }
 
@@ -138,23 +138,23 @@ namespace EtherEngine.Core.Shapes
             }
         }
 
-        public bool ContainsPoint(Vector2 point)
+        public bool ContainsPoint(in Vector2 point)
         {
 
-            point -= GetCenter();
+            Vector2 tempPoint = point - GetCenter();
 
-            float pointProjection = MathF.Abs(Vector2.Dot(point, _normals[0]));
+            float pointProjection = MathF.Abs(Vector2.Dot(tempPoint, _normals[0]));
             if (Width / 2 < pointProjection)
                 return false;
 
-            pointProjection = MathF.Abs(Vector2.Dot(point, _normals[1]));
+            pointProjection = MathF.Abs(Vector2.Dot(tempPoint, _normals[1]));
             if (Height / 2 < pointProjection)
                 return false;
 
             return true;
         }
 
-        public bool Equals(RotatableQuad quad)
+        public bool Equals(in RotatableQuad quad)
         {
             return X == quad.X &&
                 Y == quad.Y &&
@@ -173,7 +173,7 @@ namespace EtherEngine.Core.Shapes
             return $"Quad:X={X}, Y={Y}, Width={Width}, Height={Height}";
         }
 
-        public void MoveCenter(Vector2 target)
+        public void MoveCenter(in Vector2 target)
         {
             X = target.X;
             Y = target.Y;

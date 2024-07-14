@@ -13,14 +13,14 @@ namespace EtherEngine.Systems.Collision
 {
     public class CollisionGizmoSystem : DrawableSystem
     {
-        QueryDescription queryDescription = new QueryDescription().WithAll<CollisionGizmoComponent, ColliderShapeComponent>();
         public CollisionGizmoSystem(EtherScene scene) : base(scene)
         {
+            queryDescription = new QueryDescription().WithAll<CollisionGizmoComponent, ColliderShapeComponent>();
         }
 
         public override void Draw(SpriteBatch spriteBatch, ShapeBatch shapeBatch)
         {
-            var query = _scene._world.Query(queryDescription);
+            var query = _scene.EntityManager.Registry.Query(queryDescription);
 
             if (_scene.MainCamera != null)
                 shapeBatch.Begin(transformMatrix: _scene.MainCamera.GetTransform());

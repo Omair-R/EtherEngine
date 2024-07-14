@@ -5,12 +5,16 @@
 - [ ] Support for other primary shapes.
 - [X] <strike>Custom exceptions.</strike>
 - [X] <strike>Entity relations.</strike>
-- [ ] Event bus. 
-- [ ] Rigid bodies.
+- [X] <strike>Event bus.</strike>
+- [X] <strike>Commans for adding an removing entities.</strike>
+- [X] <strike>Conver the Particles to ECS.</strike>
+- [ ] Decorators to manage entities.
+- [ ] Rigid bodies physics.
 - [ ] Verlet integration. 
 - [X] <strike>Singlton Components.</strike>
 - [ ] Manageable GameTime.
 - [ ] Parallal and inline queries.
+- [X] <strike>Collision Types.</strike>
 - [ ] UI components:
 	- [ ] Buttons. 
 	- [ ] Managed Text.
@@ -21,14 +25,14 @@
 - [ ] Lock/Disable entities.
 - [ ] Tile wrapper.
 - [ ] Disposables.
-- [ ] Replace the world with an EtherWorld.
+- [X] <strike>Replace the world with an EtherWorld.</strike>
 - [ ] Expand the PID controller.
-
+- [X] <strike>Add events only on trigger.</strike>
 
 
 #### Refactoring: 
 - [ ] Refactor the shape renderer
-- [ ] Scene Refactoring.
+- [X] <strike>Scene Refactoring.</strike>
 - [ ] Standardize the components
 - [ ] Change all the Getsomething functions to Something.
 

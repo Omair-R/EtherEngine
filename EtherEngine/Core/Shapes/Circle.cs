@@ -7,19 +7,19 @@ namespace EtherEngine.Core.Shapes
         public float Radius { get; set; }
         public Vector2 Center { get; set; }
 
-        public Circle(Vector2 center, float radius)
+        public Circle(in Vector2 center, float radius)
         {
             Center = center;
             Radius = radius;
         }
 
-        public bool ContainsPoint(Vector2 point)
+        public bool ContainsPoint(in Vector2 point)
         {
             var distance = Vector2.Distance(Center, point);
             return distance < Radius;
         }
 
-        public bool Equals(Circle other)
+        public bool Equals(in Circle other)
         {
             return Center == other.Center && Radius == other.Radius;
         }
@@ -46,7 +46,7 @@ namespace EtherEngine.Core.Shapes
             return Center;
         }
 
-        public void MoveCenter(Vector2 target)
+        public void MoveCenter(in Vector2 target)
         {
             Center = target;
         }

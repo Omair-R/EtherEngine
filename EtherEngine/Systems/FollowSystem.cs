@@ -9,20 +9,19 @@ namespace EtherEngine.Systems
 {
     public class FollowSystem : UpdatableSystem
     {
-        QueryDescription queryDescription = new QueryDescription().WithAll<TransformComponent, FollowComponent>();
-
         public FollowSystem(EtherScene scene) : base(scene)
         {
+            queryDescription = new QueryDescription().WithAll<TransformComponent, FollowComponent>();
         }
 
-        public override void Update(in GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _scene._world.Query(queryDescription, (in Entity entity, 
+            _scene.EntityManager.Registry.Query(queryDescription, (in Entity entity, 
                                                    ref TransformComponent transform,
                                                    ref FollowComponent follow) =>
             {
-                var followTransform = _scene.entityManager.GetEntity(follow.EntityUID).GetComponent<TransformComponent>();
+                var followTransform = _scene.EntityManager.GetEntity(follow.EntityUID).GetComponent<TransformComponent>();
 
                 switch (follow.FollowType)
                 {

@@ -8,18 +8,18 @@ namespace EtherEngine.Systems.Motion
 {
     public class DragDriveSystem : UpdatableSystem
     {
-        QueryDescription queryDescription = new QueryDescription().WithAll<MotionComponent, MotionDirectionComponent, DragDriveComponent>();
 
         public DragDriveSystem(EtherScene scene) : base(scene)
         {
+            queryDescription = new QueryDescription().WithAll<MotionComponent, MotionDirectionComponent, DragDriveComponent>();
         }
 
-        public override void Update(in GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
 
-            _scene._world.Query(in queryDescription, (ref MotionComponent motion, ref MotionDirectionComponent input, ref DragDriveComponent dragDrive) =>
+            _scene.EntityManager.Registry.Query(in queryDescription, (ref MotionComponent motion, ref MotionDirectionComponent input, ref DragDriveComponent dragDrive) =>
             {
                 IDrag drag = dragDrive.DragType switch
                 {

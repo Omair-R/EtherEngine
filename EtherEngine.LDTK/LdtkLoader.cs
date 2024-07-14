@@ -34,9 +34,10 @@ namespace EtherEngine.LDTK
         public CollisionLayer CollisionLayer { get; private set; }
         public string CurrentLevel { get; private set; }
 
-        public LdtkLoader(LdtkJson root)
+        public LdtkLoader(LdtkJson root, EtherScene scene)
         {
             _root = root;
+            _scene = scene;
             if (_root.ExternalLevels) //TODO: Add support for external levels.
                 throw new NotImplementedException();
 
@@ -50,36 +51,36 @@ namespace EtherEngine.LDTK
             return identifier;
         }
 
-        public void LoadLevel(EtherScene scene, string identifer, string collisionLayer= "", float scale=1f, bool useContentPipeline = true)
+        public void LoadLevel( string identifer, string collisionLayer= "", float scale=1f, bool useContentPipeline = true)
         {
             Level level = _root.Levels.FirstOrDefault((x) => x.Identifier == identifer);
 
             _scale = scale;
-            _LoadLevel(scene, level, collisionLayer, useContentPipeline);
+            _LoadLevel(level, collisionLayer, useContentPipeline);
 
             
             CurrentLevel = level.Identifier;
             _loadedLevel = level;
         }
 
-        public void LoadLevel(EtherScene scene, Guid Iid, string collisionLayer = "", float scale = 1f,  bool useContentPipeline = true)
+        public void LoadLevel(Guid Iid, string collisionLayer = "", float scale = 1f,  bool useContentPipeline = true)
         {
             Level level = _root.Levels.FirstOrDefault((x) => x.Iid == Iid.ToString());
 
             _scale = scale;
-            _LoadLevel(scene, level, collisionLayer, useContentPipeline);
+            _LoadLevel(level, collisionLayer, useContentPipeline);
 
             
             CurrentLevel = level.Identifier;
             _loadedLevel = level;
         }
 
-        public void LoadLevel(EtherScene scene, int Uid, string collisionLayer = "", float scale = 1f,  bool useContentPipeline = true)
+        public void LoadLevel(int Uid, string collisionLayer = "", float scale = 1f,  bool useContentPipeline = true)
         {
             Level level = _root.Levels.FirstOrDefault((x) => x.Uid == Uid);
 
             _scale = scale;
-            _LoadLevel(scene, level, collisionLayer, useContentPipeline);
+            _LoadLevel(level, collisionLayer, useContentPipeline);
 
             
             CurrentLevel = level.Identifier;
@@ -90,13 +91,13 @@ namespace EtherEngine.LDTK
         public void TransferToScene()
         {
             
-            _scene.entityManager.DestroyEntities<RenderedLayerComponent>();
-            _scene.entityManager.DestroyEntities<TileColliderComponent>();
+            _scene.EntityManager.DestroyEntities<RenderedLayerComponent>();
+            _scene.EntityManager.DestroyEntities<TileColliderComponent>();
 
             int order = 0;
             foreach (var layer in _renderedLayers)
             {
-                EtherEntity entity =_scene.entityManager.MakeEntity();
+                EtherEntity entity =_scene.EntityManager.MakeEntity();
                 entity.AddComponent<RenderedLayerComponent>(new RenderedLayerComponent
                 {
                     Texture = layer,
@@ -109,10 +110,11 @@ namespace EtherEngine.LDTK
 
             foreach (var collider in Colliders)
             {
-                EtherEntity entity = _scene.entityManager.MakeEntity();
+                EtherEntity entity = _scene.EntityManager.MakeEntity();
                 entity.AddComponent(new TileColliderComponent());
                 entity.AddComponent(new ColliderComponent
                 {
+                    CollisionType = CollisionType.Static,
                     Enable = true,
                     Layer = CollisionLayer
                 });
@@ -137,11 +139,10 @@ namespace EtherEngine.LDTK
         }
 
         //TODO: make colors if no texture. + warning.
-        private void _LoadLevel(EtherScene scene, Level level, string collisionLayer,  bool useContentPipeline)
+        private void _LoadLevel(Level level, string collisionLayer,  bool useContentPipeline)
         {
-            _scene = scene;
 
-            _whiteTexture = new Texture2D(_scene._graphicsDevice, 1, 1);
+            _whiteTexture = new Texture2D(_scene.Game.GraphicsDevice, 1, 1);
             _whiteTexture.SetData(new[] { Color.White });
 
             if (level == null)
@@ -152,7 +153,7 @@ namespace EtherEngine.LDTK
             List<RenderTarget2D> renderedLayers = new();
 
 
-            _scene.spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            _scene.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
 
             //TODO: bgImage.
@@ -170,7 +171,7 @@ namespace EtherEngine.LDTK
 
                 Texture2D tilesetTexture = GetTilesetTexture(layer.TilesetRelPath, useContentPipeline);
 
-                RenderTarget2D renderTarget2D = new RenderTarget2D(_scene._graphicsDevice,
+                RenderTarget2D renderTarget2D = new RenderTarget2D(_scene.Game.GraphicsDevice,
                                                                    layer.GridBasedWidth * layer.GridSize,
                                                                    layer.GridBasedHeight * layer.GridSize,
                                                                    false,
@@ -179,7 +180,7 @@ namespace EtherEngine.LDTK
                                                                    0,
                                                                    RenderTargetUsage.PreserveContents);
 
-                _scene._graphicsDevice.SetRenderTarget(renderTarget2D);
+                _scene.Game.GraphicsDevice.SetRenderTarget(renderTarget2D);
                 renderedLayers.Add(renderTarget2D);
 
 
@@ -197,8 +198,8 @@ namespace EtherEngine.LDTK
                         break;
                 }
 
-                _scene.spriteBatch.End();
-                _scene._graphicsDevice.SetRenderTarget(null);
+                _scene.SpriteBatch.End();
+                _scene.Game.GraphicsDevice.SetRenderTarget(null);
             }
 
             _renderedLayers = renderedLayers.ToArray();
@@ -222,7 +223,7 @@ namespace EtherEngine.LDTK
                                                  new Vector2((x + layer.GridSize) * _scale,
                                                              (y + layer.GridSize) * _scale)));
 
-                _scene.spriteBatch.Draw(tilesetTexture,
+                _scene.SpriteBatch.Draw(tilesetTexture,
                                         new Rectangle(
                                             (int)x,
                                             (int)y,
@@ -259,7 +260,7 @@ namespace EtherEngine.LDTK
                                                      new Vector2(x + layer.GridSize * _scale,
                                                                  y + layer.GridSize * _scale)));
                     if (layer.AutoLayerTiles.Length == 0)
-                        _scene.spriteBatch.Draw(tilesetTexture,
+                        _scene.SpriteBatch.Draw(tilesetTexture,
                                                 new Rectangle(
                                                     x,
                                                     y,
@@ -284,7 +285,7 @@ namespace EtherEngine.LDTK
         private Texture2D GetTilesetTexture(string path, bool useContentPipeline=true)
         {
             if (useContentPipeline)
-                return _scene.contentManager.Load<Texture2D>(path.Substring(0, path.Length - 4));
+                return _scene.Game.Content.Load<Texture2D>(path.Substring(0, path.Length - 4));
             
             throw new NotImplementedException();
         }

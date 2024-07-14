@@ -3,7 +3,7 @@ using EtherEngine.Core.Collision.Utils;
 using EtherEngine.Core.Shapes;
 using System;
 
-namespace EtherEngine.Systems.Collision
+namespace EtherEngine.Systems.Collision.Helpers
 {
     public class PolygonCollisionHelper : CollisionHelper<Polygon>
     {
@@ -15,7 +15,7 @@ namespace EtherEngine.Systems.Collision
             get { return _lazyInstance.Value; }
         }
         private PolygonCollisionHelper() { }
-        public override bool CheckCircleCollision(in Polygon current,in Circle other, out Contact contact)
+        public override bool CheckCircleCollision(in Polygon current, in Circle other, out Contact contact)
         {
             return CollisionUtils.CircleOnPolygonCollision(other, current, out contact, true);
         }
@@ -25,7 +25,7 @@ namespace EtherEngine.Systems.Collision
             return CollisionUtils.StaticQuadOnPolygonCollision(other, current, out contact, true);
         }
 
-        public override bool CheckRotatableQuadCollision( in Polygon current, in RotatableQuad other, out Contact contact)
+        public override bool CheckRotatableQuadCollision(in Polygon current, in RotatableQuad other, out Contact contact)
         {
             return CollisionUtils.RotatableQuadOnPolygonCollision(other, current, out contact, true);
         }

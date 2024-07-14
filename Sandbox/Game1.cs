@@ -9,50 +9,30 @@ using System.IO;
 
 namespace Sandbox
 {
-    public class Game1 : Game
+    public class Game1 : EtherGame
     {
         private GraphicsDeviceManager _graphics;
-        private EtherScene _scene;
-        private SpriteBatch _spriteBatch;
-        //private ITestScene _scene;
 
         private EtherGui _etherGui;
         private GuiBatch _guiBatch;
 
-        private LdtkLoader ldtkLoader;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            
         }
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            //_scene = new MotionAndInput();
-            //_scene = new CollisionAndShape();
-            //_scene = new TweenAndText();
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
             _etherGui = new EtherGui(GraphicsDevice, Window);
             _guiBatch = new GuiBatch(_etherGui);
-
-            //_scene.Initialize(GraphicsDevice);
+            CurrentScene = new TestScene(this);
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            LdtkJson json = Content.Load<LdtkJson>("test");
-            //_ldtkRenderer = new LdtkRenderer(json, Content, GraphicsDevice, _spriteBatch);
-            ldtkLoader = new LdtkLoader(json);
-
-            _scene = new TestScene(GraphicsDevice, Content, _graphics, ldtkLoader);
-
-         
-            // TODO: use this.Content to load your game content here
-            //_scene.LoadContent(Content);
+            base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime)
@@ -60,23 +40,20 @@ namespace Sandbox
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-            _scene.Update(gameTime);
+            CurrentScene.Update(gameTime);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            //_ldtkRenderer.Draw(_scene.MainCamera);
-            _scene.Draw();
+
+            CurrentScene.Draw();
 
             _guiBatch.Begin(gameTime);
 
-            // Draw our UI
             ImGuiLayout();
 
-            // Call AfterLayout now to finish up and draw all the things
             _guiBatch.End();
             base.Draw(gameTime);
         }

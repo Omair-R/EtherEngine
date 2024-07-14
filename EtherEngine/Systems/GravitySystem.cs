@@ -8,16 +8,16 @@ namespace EtherEngine.Systems
 {
     public class GravitySystem : UpdatableSystem
     {
-        QueryDescription queryDescription = new QueryDescription().WithAll<MotionComponent, GravityComponent>();
         public GravitySystem(EtherScene scene) : base(scene)
         {
+            queryDescription = new QueryDescription().WithAll<MotionComponent, GravityComponent>();
         }
 
-        public override void Update(in GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            _scene._world.Query(in queryDescription, (ref MotionComponent motion, ref GravityComponent gravity) =>
+            _scene.EntityManager.Registry.Query(in queryDescription, (ref MotionComponent motion, ref GravityComponent gravity) =>
             {
                 motion.Velocity += gravity.Acceleration * dt;
             });

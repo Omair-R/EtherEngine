@@ -9,10 +9,9 @@ namespace EtherEngine.Systems
 {
     public class SpriteSystem : DrawableSystem
     {
-        QueryDescription queryDescription = new QueryDescription().WithAll<TransformComponent, SpriteComponent, ColorComponent>();
-
         public SpriteSystem(EtherScene scene) : base(scene)
         {
+            queryDescription = new QueryDescription().WithAll<TransformComponent, SpriteComponent, ColorComponent>();
         }
 
         public Rectangle GetDestinationRectangle(in TransformComponent transform)
@@ -23,7 +22,7 @@ namespace EtherEngine.Systems
 
         public override void Draw(SpriteBatch spriteBatch, ShapeBatch shapeBatch)
         {
-            var query = _scene._world.Query(in queryDescription);
+            var query = _scene.EntityManager.Registry.Query(in queryDescription);
 
             if (_scene.MainCamera != null)
                 spriteBatch.Begin(transformMatrix: _scene.MainCamera.GetTransform(), samplerState: SamplerState.PointWrap);
@@ -44,7 +43,7 @@ namespace EtherEngine.Systems
 
                     spriteBatch.Draw(sprite.Texture, 
                                     transform.Position, 
-                                    sprite.SrcRect, color.Color, transform.Rotation,
+                                    sprite.SrcRect, color.GetActualColor(), transform.Rotation,
                                     new Vector2(sprite.SrcRect.Width / 2, sprite.SrcRect.Height / 2),
                                     transform.Scale,
                                     sprite.Effect,

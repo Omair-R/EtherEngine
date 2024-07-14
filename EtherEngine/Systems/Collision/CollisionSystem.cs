@@ -3,29 +3,29 @@ using EtherEngine.Components;
 using EtherEngine.Core.Collision.Models;
 using EtherEngine.Core.Shapes;
 using EtherEngine.Entities;
+using EtherEngine.Systems.Collision.Helpers;
+using EtherEngine.Systems.Event;
 using EtherUtils;
 using Microsoft.Xna.Framework;
 using System;
+using System.Diagnostics;
 
 namespace EtherEngine.Systems.Collision
 {
 
     public class CollisionSystem : UpdatableSystem
     {
-        private QueryDescription queryDescription = new QueryDescription().WithAll<TransformComponent, ColliderComponent, ColliderShapeComponent>();
-
 
         public static event EventHandler<CollisionEventArgs> CollisionOccured;
-
 
         public void OnCollisionOccured(CollisionEventArgs e) => EventUtils.Invoke(CollisionOccured, this, e);
 
         public CollisionSystem(EtherScene scene) : base(scene)
         {
+            queryDescription = new QueryDescription().WithAll<TransformComponent, ColliderComponent, ColliderShapeComponent>();
         }
 
-
-        public override void Update(in GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
 
             bool collisionHappened;
@@ -36,7 +36,7 @@ namespace EtherEngine.Systems.Collision
 
             ICollisionHelper collisionHelper;
 
-            _scene._world.Query(in queryDescription, (in Entity enitity, ref TransformComponent transform,  ref ColliderComponent collider, ref ColliderShapeComponent colliderShape) =>
+            _scene.EntityManager.Registry.Query(in queryDescription, (in Entity enitity, ref TransformComponent transform,  ref ColliderComponent collider, ref ColliderShapeComponent colliderShape) =>
             {
                 colliderShape.Shape.MoveCenter(transform.Position);
 
@@ -46,26 +46,29 @@ namespace EtherEngine.Systems.Collision
                 currentColliderShape = colliderShape;
                 currentEntity = enitity;
 
-                _scene._world.Query(in queryDescription, (in Entity otherEnitity, ref TransformComponent otherTransform, ref ColliderComponent otherCollider, ref ColliderShapeComponent otherShape) =>
+                _scene.EntityManager.Registry.Query(in queryDescription, (in Entity otherEnitity, ref TransformComponent otherTransform, ref ColliderComponent otherCollider, ref ColliderShapeComponent otherShape) =>
                 {
                     if (currentEntity == otherEnitity) return;
 
-                    if (currentCollider.Layer != null && !currentCollider.Layer.ShouldCollide(otherCollider.Layer)) return;
+                    if (currentCollider.Layer == null || !currentCollider.Layer.ShouldCollide(otherCollider.Layer) || currentCollider.CollisionType == CollisionType.Static) return;
 
                     collisionHappened = collisionHelper.CheckCollsion(currentColliderShape, otherShape, out Contact contact);
 
                     if (collisionHappened)
                     {
-                        OnCollisionOccured(new CollisionEventArgs()
-                        {
-                            collidingEntity = EtherEntity.Wrap(_scene, otherEnitity),
-                            partentEntity = EtherEntity.Wrap(_scene, currentEntity),
-                            contact = contact,
-                            layer = currentCollider.Layer,
-                        });
-
-                        currentColliderShape.Shape.MoveCenter(currentColliderShape.Shape.GetCenter() - (contact.penetration * contact.collisionDirection)) ;
-                        
+                        if (currentCollider.CollisionType == CollisionType.Trigger || otherCollider.CollisionType == CollisionType.Trigger)
+                            OnCollisionOccured(new CollisionEventArgs()
+                            {
+                                collidingEntity = EtherEntity.Wrap(_scene, otherEnitity),
+                                partentEntity = EtherEntity.Wrap(_scene, currentEntity),
+                                contact = contact,
+                                layer = currentCollider.Layer,
+                            });
+                        //_scene.TriggerEvent<KillComponent>(new KillComponent { Sender = otherEnitity }, this);
+                        if (otherCollider.CollisionType == CollisionType.Dynamic)
+                            otherShape.Shape.MoveCenter(otherShape.Shape.GetCenter() + (contact.penetration * contact.collisionDirection));
+                        if (currentCollider.CollisionType == CollisionType.Dynamic && otherCollider.CollisionType == CollisionType.Static)
+                            currentColliderShape.Shape.MoveCenter(currentColliderShape.Shape.GetCenter() - (contact.penetration * contact.collisionDirection));
                     }
                 });
 

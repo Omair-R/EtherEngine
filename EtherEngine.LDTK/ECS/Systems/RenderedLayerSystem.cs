@@ -1,6 +1,7 @@
 ﻿using Arch.Core;
 using EtherEngine.Core.DrawBatch;
 using EtherEngine.LDTK.ECS.Components;
+using EtherEngine.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -11,14 +12,14 @@ namespace EtherEngine.LDTK.ECS.Systems
 {
     public class RenderedLayerSystem : DrawableSystem
     {
-        QueryDescription queryDescription = new QueryDescription().WithAll<RenderedLayerComponent>();
         public RenderedLayerSystem(EtherScene scene) : base(scene)
         {
+            queryDescription = new QueryDescription().WithAll<RenderedLayerComponent>();
         }
 
         public override void Draw(SpriteBatch spriteBatch, ShapeBatch shapeBatch)
         {
-            Query query = _scene._world.Query(queryDescription);
+            Query query = _scene.EntityManager.Registry.Query(queryDescription);
 
             if (_scene.MainCamera != null)
                 spriteBatch.Begin(transformMatrix: _scene.MainCamera.GetTransform(), samplerState: SamplerState.PointClamp);

@@ -1,20 +1,18 @@
 ﻿using Arch.Core;
+using Arch.Core.Extensions;
+using Arch.Core.Utils;
 using EtherEngine.Components;
 using EtherEngine.Components.Graphics;
 using EtherEngine.Components.Particles;
 using EtherUtils.Random;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EtherEngine.Systems
 {
     public class ParticlesEmitterSystem : UpdatableSystem
     {
         RandomSinglton _Random;
+
         public ParticlesEmitterSystem(EtherScene scene) : base(scene)
         {
             queryDescription = new QueryDescription().WithAll<ParticleEmitterComponent, ParticleInstructionComponent, SpriteComponent>();
@@ -53,15 +51,27 @@ namespace EtherEngine.Systems
 
         private void Emit(in ParticleEmitterComponent emitter, in ParticleInstructionComponent instruction, in SpriteComponent sprite)
         {
+            var archetype = new ComponentType[] //TODO: make a way to make archtype creation easier.
+            {
+                typeof(ParticleComponent),
+                typeof(TransformComponent),
+                typeof(MotionComponent),
+                typeof(MasslessDriveComponent),
+                typeof(ColorComponent),
+                typeof(SpriteComponent)
+            };
+
+            _scene.EntityManager.Registry.Reserve(archetype, emitter.Amount);
+
             for ( int i = 0; i < emitter.Amount;  i++ )
             {
-                var entity = _scene.EntityManager.MakeEntity();
+                var entity = _scene.EntityManager.Registry.Create(archetype);
 
                 var scaleBegin = ApplyVariance(instruction.ScaleBegin, instruction.ScaleVariance);
                 var alphaBegin = ApplyVariance(instruction.AlphaBegin, instruction.AlphaVariance);
                 var colorBegin = instruction.ColorBegin; //TODO: use the hue property.
 
-                entity.AddComponent(new ParticleComponent
+                entity.Set(new ParticleComponent
                 {
                     ScaleBegin = scaleBegin,
                     ScaleEnd = ApplyVariance(instruction.ScaleEnd, instruction.ScaleVariance),
@@ -78,27 +88,27 @@ namespace EtherEngine.Systems
                     Age = 0.0f
                 });
 
-                entity.AddComponent(new TransformComponent
+                entity.Set(new TransformComponent
                 {
                     Position = ApplyVariance(instruction.Position, instruction.Spread),
                     Scale = new Vector2(scaleBegin, scaleBegin),
                     Rotation = ApplyVariance(instruction.Angle, instruction.AngleVariance)
                 });
 
-                entity.AddComponent(new MotionComponent
+                entity.Set(new MotionComponent
                 {
                     Velocity = ApplyVariance(instruction.InitVelocity, instruction.InitVelocityVariance),
                 });
 
-                entity.AddComponent(new MasslessDriveComponent
+                entity.Set(new MasslessDriveComponent
                 {
                     Acceleration = instruction.Acceleration,
                     FrictionCoff = instruction.Damping,
                 });
 
-                entity.AddComponent(sprite);
+                entity.Set(sprite);
 
-                entity.AddComponent(new ColorComponent
+                entity.Set(new ColorComponent
                 {
                     Color = colorBegin,
                     Alpha = alphaBegin,

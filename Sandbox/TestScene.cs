@@ -41,12 +41,14 @@ namespace Sandbox
             _systemManager.AddSystem(new PIDDriveSystem(this));
             _systemManager.AddSystem(new MotionSystem(this));
             _systemManager.AddSystem(new KillEntitiyEventSystem(this));
+            _systemManager.AddSystem(new DestroyParticlesEventSystem(this));
             _systemManager.AddSystem(new GravitySystem(this));
-            _systemManager.AddSystem(new CollisionGizmoSystem(this));
+            //_systemManager.AddSystem(new CollisionGizmoSystem(this));
             _systemManager.AddSystem(new CollisionSystem(this));
 
 
             EtherEntity spriteEntity = EntityManager.MakeEntity();
+
             _ = new Texture2D(Game.GraphicsDevice, 100, 100);
 
             Texture2D playerTexture = Game.Content.Load<Texture2D>("fall");
@@ -108,7 +110,7 @@ namespace Sandbox
 
             particleEmitter.AddComponent(new ParticleEmitterComponent { 
                 Repeat = true,
-                Amount = 100,
+                Amount = 200,
                 Timer = new Timer(0.5f),
             });
             particleEmitter.AddComponent(new ParticleInstructionComponent

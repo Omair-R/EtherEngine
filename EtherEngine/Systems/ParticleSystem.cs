@@ -2,14 +2,9 @@
 using EtherEngine.Components;
 using EtherEngine.Components.Graphics;
 using EtherEngine.Components.Particles;
-
 using EtherEngine.Systems.Event;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace EtherEngine.Systems
 {
@@ -34,7 +29,7 @@ namespace EtherEngine.Systems
                     particle.Age += dt;
                     if (particle.Age > particle.LifeTime)
                     {
-                        _scene.TriggerEvent<KillComponent>(new KillComponent { Sender = entity }, this);
+                        _scene.TriggerEvent<KillParticleComponent>(new KillParticleComponent { Sender = entity }, this);
                     }
 
                     float timeRatio = particle.Age / particle.LifeTime;

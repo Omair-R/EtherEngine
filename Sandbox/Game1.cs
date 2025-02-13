@@ -71,9 +71,9 @@ namespace Sandbox
             ImGui.Text(string.Format("Application average {0:F3} ms/frame ({1:F1} FPS)", 1000f / ImGui.GetIO().Framerate, ImGui.GetIO().Framerate));
             ImGui.End();
 
-            //bool show_test_window = true;
+            bool show_test_window = true;
             //ImGui.SetNextWindowPos(new ImVec2(650, 20), ImGuiCond.FirstUseEver);
-            //ImGui.ShowDemoWindow(ref show_test_window);
+            ImGui.ShowDemoWindow(ref show_test_window);
 
             _etherGui.FontStore.PopFont();
         }

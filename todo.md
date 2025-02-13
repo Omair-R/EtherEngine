@@ -8,6 +8,7 @@
 - [X] <strike>Event bus.</strike>
 - [X] <strike>Commans for adding an removing entities.</strike>
 - [X] <strike>Conver the Particles to ECS.</strike>
+- [ ] Texture Manager.
 - [ ] Decorators to manage entities.
 - [ ] Rigid bodies physics.
 - [ ] Verlet integration. 
@@ -28,6 +29,7 @@
 - [X] <strike>Replace the world with an EtherWorld.</strike>
 - [ ] Expand the PID controller.
 - [X] <strike>Add events only on trigger.</strike>
+- [ ] Input resource system.
 
 
 #### Refactoring: 

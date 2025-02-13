@@ -1,5 +1,6 @@
 ﻿using Arch.Core;
 using Arch.Core.Extensions;
+using Arch.Core.Utils;
 using EtherEngine.Components;
 using EtherEngine.Entities;
 using Microsoft.Win32;
@@ -108,6 +109,7 @@ namespace EtherEngine.Managers
 
             Registry.GetEntities(queryDescription, list);
             
+
             for (int i = 0; i < list.Count; i++)
             {
                 if(_entityMap.Remove(list[i].Get<IdComponent>().Id))
